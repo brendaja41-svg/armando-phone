@@ -1,58 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/animations.css">
-   <title>Armando — iPhone</title>
+    <title>iPhone de Armando</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            user-select: none;
+        }
+
+        /* Chasis del iPhone */
+        .phone-frame {
+            width: 380px;
+            height: 780px;
+            border-radius: 50px;
+            box-shadow: 0 0 0 11px #1e293b, 0 0 0 13px #334155, 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Fondo de pantalla */
+        .phone-wallpaper {
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.6) 100%),
+                        url('img/ellos y mel.JPG') center/cover no-repeat,
+                        linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        /* Cristal del Dock tipo iOS */
+        .ios-glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Efecto al presionar un ícono */
+        .app-icon {
+            transition: transform 0.15s ease, filter 0.15s ease;
+        }
+        .app-icon:active {
+            transform: scale(0.88);
+            filter: brightness(0.85);
+        }
+
+        /* Pantallas pequeñas (móviles) */
+        @media (max-width: 420px) {
+            body {
+                padding: 0 !important;
+                background-color: #000;
+            }
+            .phone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .notch {
+                display: none;
+            }
+        }
+    </style>
 </head>
-<body>
- <a href="lockscreen/lockscreen.html"><div class="powerBtn armando-power-btn" onclick="ukljuci()"></div></a>
-    <div id="telefon">
-        <div id="island"></div>
-        <div id="ekran">
-            <div id="realTime" class="time armando-time"></div>
-                
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- MARCO DEL IPHONE -->
+    <div class="phone-frame phone-wallpaper flex flex-col justify-between p-5 text-white">
+
+        <!-- Barra Superior (Status Bar + Isla Dinámica) -->
+        <div class="pt-2">
+            <!-- Dynamic Island -->
+            <div class="notch absolute top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full flex items-center justify-between px-2.5 z-50">
+                <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-blue-950/40 border border-blue-900/50 flex items-center justify-center">
+                    <div class="w-1 h-1 rounded-full bg-blue-500/80"></div>
+                </div>
             </div>
-            <div class="densa_strana">
-                <img src="img/signal.png" alt="">
-                <img src="img/wi-fi.png" alt="">
-                <img src="img/full-battery.png" alt="" class="armando-battery">
+
+            <!-- Hora e Íconos de Estado -->
+            <div class="flex justify-between items-center px-2 pt-1 text-xs font-semibold tracking-tight">
+                <span id="clock" class="text-sm font-bold">09:41</span>
+                <div class="flex items-center gap-1.5 text-xs">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-three-quarters text-sm"></i>
+                </div>
             </div>
-        <!-- Rejilla de Aplicaciones Principales -->
-<div id="gridAplikacije" class="armando-grid">
-    <a href="galerija/galerija.html" class="app-item">
-        <img src="img/photos-icon.png" alt="Fotos" class="armando-app-icon">
-        <span>Fotos</span>
-    </a>
-    <a href="beleske/beleske.html" class="app-item">
-        <img src="img/notes-icon.png" alt="Notas" class="armando-app-icon">
-        <span>Notas</span>
-    </a>
-    <a href="kalendar/kalendar.html" class="app-item">
-        <img src="img/calendar-icon.png" alt="Calendario" class="armando-app-icon">
-        <span>Calendario</span>
-    </a>
-    <a href="sat/sat.html" class="app-item">
-        <img src="img/clock-icon.png" alt="Reloj" class="armando-app-icon">
-        <span>Reloj</span>
-    </a>
-</div>
-            <div id="donjeIkonice" class="armando-dock">
-                <a href="poruke/poruke.html"><img src="img/iphone-message-computer-icons-text-messaging-messenger-93c1965b946804798a4d72bab8ef4b2f.png" alt="" class="donjaIkonica armando-app-icon"></a>
-<a href="poziv/poziv.html"><img src="img/dial icon.png" alt="" class="donjaIkonica armando-app-icon" id="poziv"></a>
-<a href="kalkulator/kalkulator.html"><img src="img/calc.png" alt="" class="donjaIkonica armando-app-icon"></a>
+
+            <!-- Widget de Fecha -->
+            <div class="mt-6 text-center">
+                <p id="date-display" class="text-xs uppercase tracking-widest font-medium opacity-90 drop-shadow-md">Martes, 24 de Octubre</p>
             </div>
-    
         </div>
-    </div>
-    
-    
-    <script src="js/script.js"></script>
-    
-</body>
-</html>
+
+        <!-- REJILLA DE APLICACIONES -->
+        <div class="grid grid-cols-4 gap-y-6 gap-x-3 px-1 my-auto">
+            
+            <!-- App: Galería (Fotos) -->
+            <a href="galerija/galerija.html" class="flex flex-col items-center gap-1.5 group">
+                <div class="app-icon w-14 h-14
