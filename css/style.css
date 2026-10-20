@@ -656,3 +656,17 @@ button {
 .armando-app-icon:active {
   transform: scale(0.92);
 }
+/* Estilos para los globos de mensaje en el chat */
+.porukajs {
+  background-color: var(--armando-accent, #007aff);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 18px;
+  border-bottom-right-radius: 4px;
+  max-width: 75%;
+  margin: 6px 12px 6px auto;
+  word-wrap: break-word;
+  font-size: 15px;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
