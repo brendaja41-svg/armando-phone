@@ -162,7 +162,16 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .edit{display:block;margin:0 16px 14px;width:calc(100% - 32px);padding:8px;border-radius:8px;background:#efefef;text-align:center;font-weight:600;font-size:14px}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
 .pgrid div{aspect-ratio:1;background-size:cover;background-position:center}
-#bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
+.avf{background-size:cover;background-position:center}
+.ic-tel{background:linear-gradient(#67f07d,#0fbf3e);font-size:32px}
+#callView{background:linear-gradient(#4a4a52,#141416);color:#fff;align-items:center;padding-top:120px;z-index:6}
+.cav{width:120px;height:120px;border-radius:50%;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:18px}
+.cname{font-size:34px;font-weight:500}
+.cst{font-size:18px;opacity:.7;margin-top:6px;min-height:24px}
+.cmsg{margin:26px 30px 0;padding:14px 16px;background:rgba(255,255,255,.12);border-radius:16px;font-size:16px;line-height:1.4;text-align:center}
+.cend{position:absolute;bottom:90px;left:50%;margin-left:-36px;width:72px;height:72px;border-radius:50%;background:#ff3b30;display:flex;align-items:center;justify-content:center;font-size:32px}
+.cend span{display:block;transform:rotate(135deg)}
+  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -181,9 +190,9 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
     <div id="grid"></div>
     <div id="dock"></div>
   </div>
-
   <section class="app" id="app-mensajes"><div class="big">Mensajes</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="msgList"></div></div><div class="detail" id="msgChat"></div></section>
   <section class="app" id="app-notas"><div class="big">Notas</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="noteList"></div></div><div class="detail" id="noteView"></div></section>
+    <section class="app" id="app-llamadas"><div class="big">Recientes</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="callList"></div></div><div class="tabs"><div>⭐<br>Favoritos</div><div class="on">🕒<br>Recientes</div><div>👤<br>Contactos</div><div>⌨️<br>Teclado</div></div><div class="detail" id="callView"></div></section>
   <section class="app" id="app-fotos" style="background:#fff"><div class="big">Recientes</div><div class="body" style="padding-bottom:90px"><div id="photos"></div></div><div class="tabs"><div class="on">🖼️<br>Biblioteca</div><div>💜<br>Para ti</div><div>📁<br>Álbumes</div></div><div class="detail full" id="photoView"></div></section>
   <section class="app" id="app-calendario" style="background:#fff"><div class="mh"><button id="prevM">‹</button><h2 id="monthName"></h2><button id="nextM">›</button></div><div class="cal" id="cal"></div><div class="body" id="evList" style="background:#f2f2f7;padding-top:4px"></div></section>
   <section class="app" id="app-music"><div style="padding:0 12px"></div><div class="body"><div class="art" id="art">♫</div><div class="np"><h2 id="mTitle"></h2><p id="mArtist"></p></div><div class="prog"><div id="mProg"></div></div><div class="ctl"><button id="mPrev"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.500 12 18 18V6z"/></svg></button><button id="mPlay"></button><button id="mNext"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.500-6L6 6z"/></svg></button></div><div class="q" id="mQueue"></div></div></section>
@@ -192,6 +201,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
   <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
+ 
   <div id="bar-home" title="Inicio"></div>
 </div>
 
@@ -221,8 +231,19 @@ const DATA = {
       { src: "", texto: "Pie de foto de ejemplo 3.", likes: 8,  fecha: "hace 1 semana" }
     ]
   },
+    llamadas: {
+    contacto: "Mi amor ❤️",
+    foto: "img/solo bri.JPG",
+    buzon: "Hola, soy Brian. Ahora no puedo contestar, deja tu mensaje y te llamo en cuanto pueda. Te amo.",
+    recientes: [
+      { tipo: "saliente", hora: "Hoy" },
+      { tipo: "saliente", hora: "Ayer" },
+      { tipo: "saliente", hora: "Lunes" },
+      { tipo: "entrante", hora: "29 sep" }
+    ]
+  },
     mensajes: [
-    { nombre: "Mi amor ❤️", hora: "Ayer", chat: [
+        { nombre: "Mi amor ❤️", hora: "Ayer", foto: "img/solo bri.JPG", chat: [
       { dia: "Martes 29 sep 18:05" },
       { yo: false, t: "Ya salí del trabajo, ¿necesitas algo del súper?" },
       { yo: true,  t: "Leche y pan. Y algo dulce para Melody 😄" },
@@ -302,12 +323,13 @@ const ICONOS = {
   fotos:'<div class="ic ic-fotos"><i></i></div>',
   calendario:'<div class="ic ic-cal"><small></small><b></b></div>',
   music:'<div class="ic ic-music">♫</div>',
-  insta:'<div class="ic ic-insta"><i></i></div>'
+    insta:'<div class="ic ic-insta"><i></i></div>',
+  llamadas:'<div class="ic ic-tel">📞</div>'
 };
-const NOMBRES = {mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram"};
+const NOMBRES = {llamadas:"Teléfono",mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram"};
 const btn = id => `<button class="app-i" data-app="${id}">${ICONOS[id]}<span>${NOMBRES[id]}</span></button>`;
 $("#grid").innerHTML = ["calendario","fotos","music","insta"].map(btn).join("");
-$("#dock").innerHTML = ["mensajes","notas"].map(btn).join("");
+$("#dock").innerHTML = ["llamadas","mensajes","notas"].map(btn).join("");
 reloj(); setInterval(reloj,15000);
 
 /* Navegación */
@@ -362,15 +384,16 @@ $("#island").onclick = bloquear;  /* tocar la isla dinámica bloquea el teléfon
 const dbar = (vol,mid) => `<div class="dbar"><button data-back>‹ ${vol}</button><div class="mid">${mid||""}</div><span style="width:60px"></span></div>`;
 
 /* Mensajes */
+const avHtml = (nombre,i,foto) => foto ? `<div class="av avf" style="background-image:url('${encodeURI(foto)}')"></div>` : `<div class="av" style="background:${colores[i%6]}">${nombre[0]}</div>`;
 $("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
   const ult = [...m.chat].reverse().find(x=>x.t);
-  return `<button class="row" data-m="${i}"><div class="av" style="background:${colores[i%6]}">${m.nombre[0]}</div><div class="t"><b>${m.nombre}</b><span>${ult?ult.t:""}</span></div><small>${m.hora}</small></button>`;
+  return `<button class="row" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?ult.t:""}</span></div><small>${m.hora}</small></button>`;
 }).join("");
 $("#msgList").onclick = e=>{
   const r = e.target.closest("[data-m]"); if(!r) return;
   const i = +r.dataset.m, m = DATA.mensajes[i];
   const ultimoYo = m.chat.map(x=>!!x.yo).lastIndexOf(true);
-  $("#msgChat").innerHTML = dbar("Mensajes",`<div class="av" style="background:${colores[i%6]}">${m.nombre[0]}</div>${m.nombre}`) +
+  $("#msgChat").innerHTML = dbar("Mensajes", avHtml(m.nombre,i,m.foto) + m.nombre) +
     `<div class="scroll"><div class="chat">` + m.chat.map((x,k)=>
       x.dia ? `<div class="day">${x.dia}</div>` : `<div class="b ${x.yo?"me":"you"}">${x.t}</div>` + (k===ultimoYo?`<div class="entreg">Entregado</div>`:"")).join("") +
     `</div></div><div class="input"><i>+</i><div>iMessage</div></div>`;
@@ -467,6 +490,29 @@ function igTab(t){
 }
 igTab("feed");
 document.querySelectorAll("[data-igtab]").forEach(b=>b.onclick = ()=>igTab(b.dataset.igtab));
+/* Llamadas */
+const LL = DATA.llamadas;
+const llFoto = LL.foto ? `background-image:url('${encodeURI(LL.foto)}')` : `background:${colores[0]}`;
+$("#callList").innerHTML = LL.recientes.map(r=>
+  `<button class="row" data-call><div class="av ${LL.foto?"avf":""}" style="${llFoto}">${LL.foto?"":LL.contacto[0]}</div><div class="t"><b>${LL.contacto}</b><span>${r.tipo}</span></div><small>${r.hora}</small></button>`).join("");
+let callTok = 0;
+function llamar(){
+  const tok = ++callTok, v = $("#callView");
+  const pantalla = (estado, msg) => { if(tok!==callTok) return;
+    v.innerHTML = `<div class="cav" style="${llFoto}">${LL.foto?"":LL.contacto[0]}</div><div class="cname">${LL.contacto}</div><div class="cst" id="cSt">${estado}</div>${msg?`<div class="cmsg">${msg}</div>`:""}<button class="cend" data-end><span>📞</span></button>`; };
+  pantalla("llamando…");
+  v.classList.add("on"); $("#status").classList.remove("dark");
+  setTimeout(()=>{
+    pantalla("Buzón de voz", LL.buzon);
+    let s = 0;
+    const iv = setInterval(()=>{
+      if(tok!==callTok || !v.classList.contains("on")){ clearInterval(iv); return; }
+      s++; const el = $("#cSt"); if(el) el.textContent = "Buzón de voz · " + Math.floor(s/60) + ":" + pad(s%60);
+    },1000);
+  },4000);
+}
+$("#callList").onclick = e=>{ if(e.target.closest("[data-call]")) llamar(); };
+$("#callView").onclick = e=>{ if(e.target.closest("[data-end]")){ callTok++; $("#callView").classList.remove("on"); $("#status").classList.add("dark"); } };
 </script>
 </body>
 </html>
