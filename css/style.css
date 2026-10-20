@@ -603,3 +603,30 @@ input:focus{
     box-shadow: none;
     background-color: rgba(0, 0, 0, 0);
 }
+/* ARMando PHONE — estilo base */
+:root {
+  --armando-bg: #f5f5f7;
+  --armando-text: #1c1c1e;
+  --armando-muted: #8e8e93;
+  --armando-accent: #34343a;
+  --armando-card: rgba(255, 255, 255, 0.88);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Helvetica Neue", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
