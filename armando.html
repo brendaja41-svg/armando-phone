@@ -195,7 +195,16 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 #pgdots i.on{background:#fff}
 @media(max-height:760px){#pill,#pgdots{display:none}}
  .row.nuevo::after{content:"";position:absolute;left:3px;top:50%;margin-top:-5px;width:10px;height:10px;border-radius:50%;background:#0a84ff}
-  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
+ #notif{position:absolute;left:10px;right:10px;top:60px;z-index:65;display:flex;gap:11px;align-items:center;padding:12px 14px;border-radius:22px;background:rgba(235,235,240,.88);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);color:#000;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35);transform:translateY(-140%);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
+#notif.on{transform:none;opacity:1;pointer-events:auto}
+#phone.locked #notif{top:auto;bottom:130px;transform:translateY(30px)}
+#phone.locked #notif.on{transform:none}
+.nic{width:38px;height:38px;border-radius:9px;background:linear-gradient(#67f07d,#0fbf3e);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}
+.ntx{flex:1;min-width:0}
+.nh{display:flex;justify-content:space-between;font-size:15px}
+.nh small{color:#6e6e73;font-size:13px}
+.nb{font-size:15px;line-height:1.25;margin-top:1px}
+ #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -227,7 +236,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
   <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
- 
+   <div id="notif"><div class="nic">💬</div><div class="ntx"><div class="nh"><b>Mamá</b><small>ahora</small></div><div class="nb">¿Ya comiste algo?</div></div></div>
   <div id="bar-home" title="Inicio"></div>
 </div>
 
@@ -603,6 +612,34 @@ function llamar(){
 }
 $("#callList").onclick = e=>{ if(e.target.closest("[data-call]")) llamar(); };
 $("#callView").onclick = e=>{ if(e.target.closest("[data-end]")){ callTok++; $("#callView").classList.remove("on"); $("#status").classList.add("dark"); } };
+/* Notificación de Mamá */
+let notifTimer, notifVista = false, pendiente = false;
+function ocultarNotif(){ clearTimeout(notifTimer); $("#notif").classList.remove("on"); }
+function programarOcultar(){ clearTimeout(notifTimer); notifTimer = setTimeout(ocultarNotif, 8000); }
+function abrirChatMama(){
+  const i = DATA.mensajes.findIndex(m=>m.nombre==="Mamá"); if(i<0) return;
+  inicio(); abrir("mensajes"); DATA.mensajes[i].nuevo = false; listaMsg(); chatMsg(i);
+}
+setTimeout(()=>{
+  if(notifVista) return;
+  $("#notif").classList.add("on");
+  if(!phone.classList.contains("locked")) programarOcultar();
+}, 3000);
+const desbloquearOrig = desbloquear;
+desbloquear = function(){
+  desbloquearOrig();
+  if(pendiente){ pendiente = false; notifVista = true; ocultarNotif(); setTimeout(abrirChatMama, 700); }
+  else if($("#notif").classList.contains("on")) programarOcultar();
+};
+$("#notif").onclick = ()=>{
+  ocultarNotif();
+  if(phone.classList.contains("locked")){ pendiente = true; mostrarPass(); }
+  else { notifVista = true; abrirChatMama(); }
+};
+$("#msgList").addEventListener("click", e=>{
+  const r = e.target.closest("[data-m]");
+  if(r){ DATA.mensajes[+r.dataset.m].nuevo = false; setTimeout(listaMsg, 500); }
+});
 </script>
 </body>
 </html>
