@@ -213,6 +213,16 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .sfr span{display:block;font-size:13px;color:#8e8e93;margin-top:1px}
 .sfbar{position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(249,249,249,.94);border-top:.5px solid #d1d1d6;padding:10px 14px 0;z-index:2}
 .sfbar div{background:rgba(118,118,128,.12);border-radius:12px;padding:10px 12px;font-size:16px;color:#8e8e93;text-align:center}
+.ic-memo{background:#000}
+.mmv{padding:30px 24px;text-align:center;background:#fff;min-height:100%}
+.mmv h2{font-size:26px}
+.mmv small{color:#8e8e93;font-size:14px}
+.wave{display:flex;align-items:center;justify-content:center;gap:3px;height:70px;margin:30px 0}
+.wave i{width:4px;border-radius:2px;background:#ff3b30;display:block}
+.mprog{height:4px;background:#e5e5ea;border-radius:2px;overflow:hidden}
+.mprog div{height:100%;width:0;background:#ff3b30}
+.mtime{display:flex;justify-content:space-between;font-size:13px;color:#8e8e93;margin-top:6px}
+.mplay{width:72px;height:72px;border-radius:50%;background:#ff3b30;color:#fff;font-size:30px;margin-top:34px;display:inline-flex;align-items:center;justify-content:center}
  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -241,7 +251,8 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
   <section class="app" id="app-calendario" style="background:#fff"><div class="mh"><button id="prevM">‹</button><h2 id="monthName"></h2><button id="nextM">›</button></div><div class="cal" id="cal"></div><div class="body" id="evList" style="background:#f2f2f7;padding-top:4px"></div></section>
   <section class="app" id="app-music"><div style="padding:0 12px"></div><div class="body"><div class="art" id="art">♫</div><div class="np"><h2 id="mTitle"></h2><p id="mArtist"></p></div><div class="prog"><div id="mProg"></div></div><div class="ctl"><button id="mPrev"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.500 12 18 18V6z"/></svg></button><button id="mPlay"></button><button id="mNext"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.500-6L6 6z"/></svg></button></div><div class="q" id="mQueue"></div></div></section>
   <section class="app" id="app-safari" style="background:#fff"><div class="sfh">Historial</div><div class="search">🔍 Buscar en el historial</div><div class="body" id="sfList"></div><div class="sfbar"><div>🔍 Buscar o introducir sitio web</div></div></section>
-  <section class="app" id="app-insta" style="background:#fff"><div class="igtop" id="igTop"></div><div class="body" style="padding-bottom:100px"><div id="igFeed"><div class="stories" id="igStories"></div><div id="igPosts"></div></div><div id="igPerfil" style="display:none"></div></div><div class="igtabs"><button data-igtab="feed" class="on">🏠</button><button>🔍</button><button>➕</button><button>🎬</button><button data-igtab="perfil"><div class="avs" id="igAvs"></div></button></div></section>
+    <section class="app" id="app-memos"><div class="big">Todas las grabaciones</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="memoList"></div></div><div class="detail" id="memoView"></div></section>
+ <section class="app" id="app-insta" style="background:#fff"><div class="igtop" id="igTop"></div><div class="body" style="padding-bottom:100px"><div id="igFeed"><div class="stories" id="igStories"></div><div id="igPosts"></div></div><div id="igPerfil" style="display:none"></div></div><div class="igtabs"><button data-igtab="feed" class="on">🏠</button><button>🔍</button><button>➕</button><button>🎬</button><button data-igtab="perfil"><div class="avs" id="igAvs"></div></button></div></section>
 
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
   <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
@@ -370,13 +381,15 @@ const DATA = {
     { fecha: "2026-10-28", titulo: "Junta con el seguro del hospital", hora: "09:30" },
     { fecha: "2026-11-12", titulo: "Revisar examenes ", hora: "Todo el día" }
   ],
-  musica: [
-    { titulo: "Coming Up Roses", artista: "Harry Styles" },
+   musica: [
+    { titulo: "Coming Up Roses", artista: "Harry Styles", src: "audio/harry.mp3" },
     { titulo: "Fix You", artista: "Coldplay" },
     { titulo: "Make You Feel My Love", artista: "Adele" },
     { titulo: "A Thousand Years", artista: "Christina Perri" }
+  ],
+  memos: [
+    { titulo: "Para Armando", fecha: "12 sep 2026", src: "audio/brian.mp3" }
   ]
-};
 /* ============================================================ */
 
 const $ = s => document.querySelector(s);
@@ -414,17 +427,18 @@ const ICONOS = {
   mapas:'<div class="ic ic-map"><svg width="34" height="40" viewBox="0 0 34 40"><path fill="#ff3b30" d="M17 0C8 0 1 7 1 15.5 1 27 17 40 17 40s16-13 16-24.5C33 7 26 0 17 0z"/><circle cx="17" cy="15.5" r="6" fill="#fff"/></svg></div>',
   clima:'<div class="ic ic-clima">⛅</div>',
   salud:'<div class="ic ic-salud"><svg width="36" height="33" viewBox="0 0 24 22"><path fill="#ff2d55" d="M12 21.5C5 15.5 1 11.7 1 7.2 1 3.8 3.6 1.5 6.5 1.5c2.3 0 4.3 1.3 5.5 3.3 1.2-2 3.2-3.3 5.5-3.3 2.9 0 5.5 2.3 5.5 5.7 0 4.5-4 8.3-11 14.3z"/></svg></div>',
-  ajustes:'<div class="ic ic-ajustes"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#48484a" stroke-width="7" stroke-dasharray="5 4.4"/><circle cx="20" cy="20" r="11" fill="#636366"/><circle cx="20" cy="20" r="5" fill="#d1d1d6"/></svg></div>',
+    memos:'<div class="ic ic-memo"><svg width="46" height="34" viewBox="0 0 46 34"><g stroke="#ff3b30" stroke-width="3.5" stroke-linecap="round"><path d="M5 14v6M11 9v16M17 4v26M23 11v12M29 7v20M35 12v10M41 15v4"/></g></svg></div>',
+ ajustes:'<div class="ic ic-ajustes"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#48484a" stroke-width="7" stroke-dasharray="5 4.4"/><circle cx="20" cy="20" r="11" fill="#636366"/><circle cx="20" cy="20" r="5" fill="#d1d1d6"/></svg></div>',
   correo:'<div class="ic ic-correo"><svg width="38" height="28" viewBox="0 0 38 28"><rect width="38" height="28" rx="4" fill="#fff"/><path d="M3 5l16 12L35 5" stroke="#1a78f2" stroke-width="3" fill="none" stroke-linejoin="round"/></svg></div>',
   appstore:'<div class="ic ic-store">A</div>',
   safari:'<div class="ic ic-safari"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25" fill="#2f9bff"/><circle cx="28" cy="28" r="25" fill="none" stroke="#d1d1d6" stroke-width="2"/><path fill="#ff3b30" d="M40 16L31 31l-6-6z"/><path fill="#fff" d="M16 40l9-15 6 6z"/></svg></div>'
 };
 const NOMBRES = {llamadas:"Teléfono",mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram",camara:"Cámara",reloj:"Reloj",mapas:"Mapas",clima:"Clima",salud:"Salud",ajustes:"Ajustes",correo:"Correo",appstore:"App Store",safari:"Safari"};
-const REAL = ["llamadas","mensajes","notas","fotos","calendario","music","insta","safari"];
+const REAL = ["llamadas","mensajes","notas","fotos","calendario","music","insta","safari","memos"];
+NOMBRES.memos = "Notas de voz";
 const BADGE = {llamadas:"4", mensajes:"3", insta:"8"};
 const btn = id => `<button class="app-i" ${REAL.includes(id)?`data-app="${id}"`:""}>${ICONOS[id]}${BADGE[id]?`<i class="bd">${BADGE[id]}</i>`:""}<span>${NOMBRES[id]}</span></button>`;
-$("#grid").innerHTML = ["calendario","fotos","camara","reloj","mapas","clima","notas","insta","salud","correo","appstore","ajustes"].map(btn).join("");
-$("#dock").innerHTML = ["llamadas","safari","mensajes","music"].map(btn).join("");
+$("#grid").innerHTML = ["calendario","fotos","camara","reloj","mapas","clima","notas","insta","memos","correo","appstore","ajustes"].map(btn).join("");$("#dock").innerHTML = ["llamadas","safari","mensajes","music"].map(btn).join("");
 reloj(); setInterval(reloj,15000);
 
 /* Navegación */
@@ -553,24 +567,47 @@ $("#nextM").onclick = ()=>{mes.setMonth(mes.getMonth()+1);diaSel=null;calendario
 $("#cal").onclick = e=>{const d=e.target.closest("[data-d]"); if(!d) return; diaSel = diaSel===d.dataset.d?null:d.dataset.d; calendario();};
 calendario();
 
-/* Música (controles visuales, sin sonido) */
-$("#app-music").firstElementChild.innerHTML = `<div class="dbar" style="background:none;border:0"><button data-back>‹ Inicio</button></div>`;
+/* Música */
+$("#app-music").firstElementChild.innerHTML = '<div class="dbar" style="background:none;border:0"><button data-back>‹ Inicio</button></div>';
 const PLAY = '<svg width="58" height="58" viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg>', PAUSA = '<svg width="58" height="58" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
 let ci = 0, sonando = false, prog = 0;
+const aud = new Audio();
+function cargar(){
+  const c = DATA.musica[ci];
+  aud.pause();
+  if(c.src){ aud.src = encodeURI(c.src); aud.load(); }
+}
 function musica(){
   const c = DATA.musica[ci];
   $("#mTitle").textContent = c.titulo; $("#mArtist").textContent = c.artista;
   $("#mPlay").innerHTML = sonando ? PAUSA : PLAY; $("#art").classList.toggle("play", sonando);
   $("#mProg").style.width = prog + "%";
-  $("#mQueue").innerHTML = DATA.musica.map((s,i)=>`<button data-s="${i}" class="${i===ci?"cur":""}">${s.titulo}<br><small>${s.artista}</small></button>`).join("");
+  $("#mQueue").innerHTML = DATA.musica.map(function(s,i){
+    return '<button data-s="' + i + '" class="' + (i===ci ? "cur" : "") + '">' + s.titulo + '<br><small>' + s.artista + '</small></button>';
+  }).join("");
 }
-$("#mPlay").onclick = ()=>{sonando=!sonando;musica();};
-$("#mNext").onclick = ()=>{ci=(ci+1)%DATA.musica.length;prog=0;musica();};
-$("#mPrev").onclick = ()=>{ci=(ci-1+DATA.musica.length)%DATA.musica.length;prog=0;musica();};
-$("#mQueue").onclick = e=>{const s=e.target.closest("[data-s]"); if(!s) return; ci=+s.dataset.s;prog=0;sonando=true;musica();};
-setInterval(()=>{ if(sonando){ prog+=1.2; if(prog>=100){prog=0;ci=(ci+1)%DATA.musica.length;} musica(); } },1000);
-musica();
-
+function reproducir(){
+  const c = DATA.musica[ci];
+  if(!c.src) return;
+  if(sonando){ aud.play().catch(function(){ sonando = false; musica(); }); } else { aud.pause(); }
+}
+function ir(n){
+  ci = (n + DATA.musica.length) % DATA.musica.length; prog = 0;
+  cargar(); reproducir(); musica();
+}
+$("#mPlay").onclick = function(){ sonando = !sonando; reproducir(); musica(); };
+$("#mNext").onclick = function(){ ir(ci+1); };
+$("#mPrev").onclick = function(){ ir(ci-1); };
+$("#mQueue").onclick = function(e){ const s = e.target.closest("[data-s]"); if(!s) return; sonando = true; ir(+s.dataset.s); };
+aud.addEventListener("timeupdate", function(){
+  if(aud.duration){ prog = aud.currentTime / aud.duration * 100; $("#mProg").style.width = prog + "%"; }
+});
+aud.addEventListener("ended", function(){ ir(ci+1); });
+setInterval(function(){
+  const c = DATA.musica[ci];
+  if(sonando && !c.src){ prog += 1.2; if(prog >= 100){ ir(ci+1); return; } $("#mProg").style.width = prog + "%"; }
+}, 1000);
+cargar(); musica();
 /* Instagram */
 const IG = DATA.instagram;
 const igFondo = (src,i) => src ? `background-image:url('${src}')` : `background:${colores[i%6]}`;
