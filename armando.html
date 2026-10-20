@@ -452,7 +452,7 @@ const avHtml = (nombre,i,foto) => foto ? `<div class="av avf" style="background-
 function listaMsg(){
   $("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
     const ult = [...m.chat].reverse().find(x=>x.t);
-    return <button class="row ${m.nuevo?"nuevo":""}" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
+    return `<button class="row ${m.nuevo?"nuevo":""}" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
   }).join("");
 }
 let mi = 0;
