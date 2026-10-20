@@ -387,9 +387,10 @@ const DATA = {
     { titulo: "Make You Feel My Love", artista: "Adele" },
     { titulo: "A Thousand Years", artista: "Christina Perri" }
   ],
-  memos: [
+    memos: [
     { titulo: "Bri en mi cumpleaños", fecha: "14 feb 2024", src: "audio/brian.mp3" }
   ]
+};
 /* ============================================================ */
 
 const $ = s => document.querySelector(s);
@@ -715,6 +716,37 @@ $("#sfList").innerHTML = DATA.busquedas.map(function(g){
     return '<div class="sfr"><i>🔍</i><div><b>' + esc(x.t) + '</b><span>' + x.d + '</span></div></div>';
   }).join("");
 }).join("");
+/* Notas de voz */
+const mAud = new Audio();
+function fmt(s){ if(!isFinite(s)) s = 0; return Math.floor(s/60) + ":" + pad(Math.floor(s%60)); }
+$("#memoList").innerHTML = DATA.memos.map(function(m,i){
+  return '<button class="row nrow" data-memo="' + i + '"><div class="t"><b>' + esc(m.titulo) + '</b><span>' + m.fecha + '</span></div></button>';
+}).join("");
+function abrirMemo(i){
+  const m = DATA.memos[i];
+  mAud.pause(); mAud.src = encodeURI(m.src); mAud.load();
+  let barras = "";
+  for(let k = 0; k < 40; k++){ barras += '<i style="height:' + (Math.abs(Math.sin(k*1.7)) * 44 + 6) + 'px"></i>'; }
+  $("#memoView").innerHTML = dbar("Grabaciones") + '<div class="scroll"><div class="mmv"><h2>' + esc(m.titulo) + '</h2><small>' + m.fecha + '</small><div class="wave">' + barras + '</div><div class="mprog"><div id="mpb"></div></div><div class="mtime"><span id="mt1">0:00</span><span id="mt2">-0:00</span></div><button class="mplay" id="mpl">▶</button></div></div>';
+  $("#memoView").classList.add("on");
+}
+$("#memoList").onclick = function(e){ const r = e.target.closest("[data-memo]"); if(r) abrirMemo(+r.dataset.memo); };
+mAud.addEventListener("loadedmetadata", function(){ const t = $("#mt2"); if(t) t.textContent = "-" + fmt(mAud.duration); });
+mAud.addEventListener("timeupdate", function(){
+  const p = $("#mpb"); if(!p || !mAud.duration) return;
+  p.style.width = (mAud.currentTime / mAud.duration * 100) + "%";
+  $("#mt1").textContent = fmt(mAud.currentTime);
+  $("#mt2").textContent = "-" + fmt(mAud.duration - mAud.currentTime);
+});
+mAud.addEventListener("ended", function(){ const b = $("#mpl"); if(b) b.textContent = "▶"; });
+$("#memoView").addEventListener("click", function(e){
+  if(!e.target.closest("#mpl")) return;
+  const b = $("#mpl");
+  if(mAud.paused){ aud.pause(); sonando = false; musica(); mAud.play().catch(function(){}); b.textContent = "⏸"; }
+  else { mAud.pause(); b.textContent = "▶"; }
+});
+document.addEventListener("click", function(e){ if(e.target.closest("[data-back]")) mAud.pause(); });
+$("#bar-home").addEventListener("click", function(){ mAud.pause(); });
 </script>
 </body>
 </html>
