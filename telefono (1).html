@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>iPhone de Armando</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0b0b0d;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;min-height:100dvh;color:#000}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-align:inherit}
+#phone{position:relative;width:393px;height:852px;max-height:100dvh;border-radius:56px;overflow:hidden;background:#000;box-shadow:0 0 0 3px #4a4a4f,0 0 0 11px #1a1a1d,0 30px 70px rgba(0,0,0,.8)}
+@media(max-width:430px){body{background:#000}#phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+#wall{position:absolute;inset:0;background:radial-gradient(120% 70% at 20% 0%,#7a6bd6 0%,transparent 60%),radial-gradient(100% 70% at 90% 100%,#e0658f 0%,transparent 60%),linear-gradient(180deg,#2b2f6b,#4b2f6b 60%,#7a3f6f);background-size:cover;background-position:center}
+#wallimg{position:absolute;inset:0;background-size:cover;background-position:center}
+#lock{position:absolute;inset:0;z-index:55;color:#fff;display:flex;flex-direction:column;align-items:center;touch-action:none;cursor:pointer;transition:transform .5s cubic-bezier(.3,.7,.2,1);background:linear-gradient(rgba(0,0,0,.22),rgba(0,0,0,0) 38%,rgba(0,0,0,.4));text-shadow:0 1px 8px rgba(0,0,0,.25)}
+#lock.off{transform:translateY(-102%);pointer-events:none}
+#lDate{margin-top:84px;font-size:21px;font-weight:500;text-transform:capitalize}
+#lTime{font-size:100px;font-weight:600;line-height:1;letter-spacing:-2px;margin-top:2px}
+#lHint{position:absolute;bottom:36px;font-size:14px;opacity:.85;animation:pulso 2.4s ease-in-out infinite}
+@keyframes pulso{50%{opacity:.35}}
+.lbtn{position:absolute;bottom:58px;width:50px;height:50px;border-radius:50%;background:rgba(40,40,45,.45);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;font-size:22px}
+#home{transition:transform .5s ease,opacity .5s ease}
+#phone.locked #home{transform:scale(.93);opacity:0}
+#phone.locked #hora{visibility:hidden}
+#island{cursor:pointer}
+#island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:122px;height:35px;border-radius:20px;background:#000;z-index:60}
+#status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:6px 34px 0 40px;font-size:16px;font-weight:600;color:#fff;z-index:50;pointer-events:none;transition:color .2s}
+#status.dark{color:#000}
+#status .r{display:flex;gap:6px;align-items:center}
+#status svg{fill:currentColor;display:block}
+#home{position:absolute;inset:0;padding:64px 18px 0;color:#fff}
+.widget{height:158px;border-radius:24px;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);padding:16px 18px;display:flex;gap:16px;margin-bottom:26px}
+.widget .l{width:44%}
+.widget .l small{color:#ff453a;font-weight:600;font-size:13px;text-transform:uppercase}
+.widget .l b{display:block;font-size:62px;font-weight:300;line-height:1}
+.widget .l span{font-size:13px;opacity:.85}
+.widget .rr{flex:1;border-left:1px solid rgba(255,255,255,.25);padding-left:14px;font-size:13px;overflow:hidden}
+.widget .rr p{margin-bottom:9px;line-height:1.25}.widget .rr em{font-style:normal;display:block;opacity:.7;font-size:12px}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 6px}
+.app-i{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.ic{width:62px;height:62px;border-radius:14px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18);transition:transform .12s,filter .12s}
+.app-i:active .ic{transform:scale(.92);filter:brightness(.8)}
+#dock{position:absolute;left:12px;right:12px;bottom:26px;height:92px;border-radius:36px;background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);display:flex;justify-content:space-around;align-items:center;padding:0 14px}
+#dock .app-i span{display:none}
+.ic-msg{background:linear-gradient(#67f07d,#0fbf3e)}
+.ic-notas{background:linear-gradient(#fff 0 30%,#fff 30%);}
+.ic-notas::before{content:"";position:absolute;left:0;right:0;top:0;height:20px;background:#ffd60a}
+.ic-notas::after{content:"";position:absolute;left:9px;right:9px;top:26px;bottom:8px;background:repeating-linear-gradient(#fff 0 8px,#d1d1d6 8px 9px)}
+.ic-fotos{background:#fff}
+.ic-fotos i{width:36px;height:36px;border-radius:50%;background:conic-gradient(#ff3b30,#ff9500,#ffd60a,#34c759,#32ade6,#5e5ce6,#af52de,#ff3b30);position:relative}
+.ic-fotos i::after{content:"";position:absolute;inset:12px;background:#fff;border-radius:50%}
+.ic-cal{background:#fff;flex-direction:column;justify-content:flex-start;padding-top:6px;line-height:1}
+.ic-cal small{color:#ff3b30;font-size:10px;font-weight:600;text-transform:uppercase}
+.ic-cal b{font-size:34px;font-weight:300;color:#000;margin-top:1px}
+.ic-music{background:linear-gradient(#fb5c74,#fa233b);color:#fff;font-size:34px}
+/* Apps */
+.app{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;padding-top:54px;border-radius:0;transform:scale(.9);opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s;z-index:10;background:#f2f2f7}
+.app.on{transform:none;opacity:1;pointer-events:auto}
+.big{font-size:34px;font-weight:700;padding:4px 20px 8px;letter-spacing:.3px}
+.search{margin:0 16px 10px;background:rgba(118,118,128,.12);border-radius:10px;padding:8px 10px;color:#8e8e93;font-size:17px}
+.body{flex:1;overflow-y:auto;padding-bottom:110px}
+.group{background:#fff;border-radius:12px;margin:0 16px;overflow:hidden}
+.row{display:flex;gap:12px;align-items:center;padding:10px 14px;width:100%;position:relative;cursor:pointer}
+.row+.row::before{content:"";position:absolute;top:0;right:0;left:70px;border-top:.5px solid #d1d1d6}
+.nrow+.nrow::before{left:14px}
+.av{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:19px;flex:none}
+.row .t{flex:1;min-width:0}.row .t b{display:block;font-size:16px;font-weight:600}.row .t span{display:block;font-size:15px;color:#8e8e93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small{color:#8e8e93;font-size:14px;align-self:flex-start;margin-top:3px}
+.detail{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;padding-top:54px;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);z-index:5;box-shadow:-8px 0 20px rgba(0,0,0,.15)}
+.detail.on{transform:none}
+.dbar{display:flex;align-items:center;justify-content:space-between;padding:4px 10px 8px;min-height:50px;background:rgba(249,249,249,.94);border-bottom:.5px solid #d1d1d6;position:relative}
+.dbar button{color:#0a84ff;font-size:17px;padding:6px;position:relative;z-index:1}
+.dbar .mid{position:absolute;left:0;right:0;text-align:center;font-size:11px;pointer-events:none}
+.dbar .mid .av{width:34px;height:34px;font-size:15px;margin:0 auto 1px}
+.scroll{flex:1;overflow-y:auto}
+.chat{padding:12px 14px 16px;display:flex;flex-direction:column;gap:3px}
+.b{max-width:74%;padding:7px 13px;border-radius:19px;font-size:17px;line-height:1.28;position:relative}
+.b.me{align-self:flex-end;background:#0a84ff;color:#fff;margin-top:5px}
+.b.you{align-self:flex-start;background:#e9e9eb;margin-top:5px}
+.day{text-align:center;font-size:11px;color:#8e8e93;margin:12px 0 4px;font-weight:500}
+.entreg{align-self:flex-end;font-size:11px;color:#8e8e93;margin-right:4px}
+.input{display:flex;gap:8px;align-items:center;padding:8px 12px 26px;border-top:.5px solid #d1d1d6;background:#fff}
+.input i{width:30px;height:30px;border-radius:50%;background:#e9e9eb;display:flex;align-items:center;justify-content:center;font-style:normal;color:#8e8e93;font-size:20px}
+.input div{flex:1;border:1px solid #d1d1d6;border-radius:18px;padding:6px 12px;color:#c7c7cc;font-size:16px}
+.note{padding:16px 22px 40px;font-size:18px;line-height:1.45;white-space:pre-wrap;background:#fff;min-height:100%}
+.note small{display:block;text-align:center;color:#8e8e93;font-size:12px;margin-bottom:14px}
+.note h2{font-size:26px;margin-bottom:10px}
+#photos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.ph{aspect-ratio:1;background-size:cover;background-position:center;width:100%}
+.full{background:#000}.full .dbar{background:rgba(20,20,20,.9);border-color:#222}.full .scroll{display:flex;flex-direction:column;justify-content:center}
+.full .im{height:62vh;background-size:contain;background-repeat:no-repeat;background-position:center}
+.full p{color:#fff;padding:14px 18px;text-align:center}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(249,249,249,.94);border-top:.5px solid #d1d1d6;display:flex;justify-content:space-around;padding-top:9px;font-size:10px;color:#8e8e93;z-index:2}
+.tabs .on{color:#0a84ff}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px}
+.mh h2{font-size:30px;font-weight:700;text-transform:capitalize;color:#ff3b30}
+.mh button{color:#ff3b30;font-size:26px;padding:0 10px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:0 10px 8px;background:#fff}
+.cal div{padding:7px 0;font-size:19px;position:relative;cursor:pointer}
+.cal .wd{font-size:12px;color:#8e8e93;cursor:default;font-weight:600}
+.cal .today span,.cal .sel span{border-radius:50%;display:inline-block;width:34px;height:34px;line-height:34px}
+.cal .today span{background:#ff3b30;color:#fff}
+.cal .sel:not(.today) span{background:#1c1c1e;color:#fff}
+.cal .has::after{content:"";position:absolute;bottom:1px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#8e8e93}
+.ev{background:#fff;margin:8px 16px 0;padding:11px 14px;border-radius:12px;border-left:4px solid #ff9500}
+.ev b{display:block;font-size:16px}.ev span{font-size:13px;color:#8e8e93}
+.empty{color:#8e8e93;text-align:center;padding:26px;font-size:15px}
+#music{background:linear-gradient(#6a3d73,#1a1a1d 70%)}
+#music .dbar{background:none;border:0}#music .dbar button{color:#fff}
+.art{width:268px;height:268px;border-radius:14px;margin:14px auto 28px;background:linear-gradient(135deg,#fb5c74,#6a5acd);box-shadow:0 18px 40px rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:90px;color:#fff;transition:transform .4s}
+.art.play{transform:scale(1)}.art:not(.play){transform:scale(.86)}
+.np{padding:0 32px;color:#fff}.np h2{font-size:22px}.np p{opacity:.65;margin-top:2px;font-size:18px}
+.prog{height:5px;background:rgba(255,255,255,.25);border-radius:3px;margin:22px 32px 6px;overflow:hidden}
+.prog div{height:100%;width:0;background:#fff;border-radius:3px}
+.ctl{display:flex;justify-content:center;align-items:center;gap:40px;margin:16px 0 20px;color:#fff}
+.ctl svg{fill:#fff}
+.q{background:rgba(255,255,255,.08);margin:0 16px;border-radius:14px;overflow:hidden;color:#fff}
+.q button{display:block;width:100%;padding:12px 16px;border-bottom:.5px solid rgba(255,255,255,.12)}
+.q button.cur{color:#ff7d95}.q small{opacity:.6}
+#pass{position:absolute;inset:0;z-index:57;background:rgba(0,0,0,.38);-webkit-backdrop-filter:blur(34px);backdrop-filter:blur(34px);color:#fff;display:flex;flex-direction:column;align-items:center;opacity:0;pointer-events:none;transition:opacity .25s}
+#pass.on{opacity:1;pointer-events:auto}
+#pTitle{margin-top:92px;font-size:20px}
+#dots{display:flex;gap:20px;margin:26px 0 38px}
+#dots.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.dot{width:13px;height:13px;border:1.5px solid #fff;border-radius:50%}.dot.f{background:#fff}
+#keys{display:grid;grid-template-columns:repeat(3,78px);gap:16px 26px}
+.key{width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;line-height:1;transition:background .15s}
+.key:active{background:rgba(255,255,255,.5)}
+.key small{font-size:10px;letter-spacing:2px;margin-top:3px;height:10px}
+.key.v{background:none;pointer-events:none}
+#pCancel{position:absolute;bottom:56px;right:44px;font-size:18px}
+.ic-insta{background:linear-gradient(45deg,#fdcb5c,#f58529 25%,#dd2a7b 55%,#8134af 80%,#515bd4)}
+.ic-insta i{width:34px;height:34px;border:3.5px solid #fff;border-radius:10px;position:relative}
+.ic-insta i::before{content:"";position:absolute;inset:5px;border:3.5px solid #fff;border-radius:50%}
+.ic-insta i::after{content:"";position:absolute;top:3px;right:3px;width:4px;height:4px;background:#fff;border-radius:50%}
+.igtop{display:flex;justify-content:space-between;align-items:center;padding:6px 16px 8px;min-height:48px;border-bottom:.5px solid #dbdbdb;background:#fff}
+.igtop .word{font-family:"Snell Roundhand","Segoe Script","Brush Script MT",cursive;font-size:30px;font-weight:700}
+.igtop b{font-size:20px}.igtop span{font-size:24px;display:flex;gap:16px}
+.stories{display:flex;gap:14px;padding:12px 14px;overflow-x:auto;border-bottom:.5px solid #efefef}
+.st{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;flex:none;width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ring{padding:3px;border-radius:50%;background:linear-gradient(45deg,#fdcb5c,#dd2a7b,#8134af)}
+.ring.yo{background:#dbdbdb}
+.ring .av{width:58px;height:58px;border:3px solid #fff}
+.post{padding-bottom:12px}
+.ph-h{display:flex;align-items:center;gap:10px;padding:10px 12px;font-weight:600;font-size:14px}
+.ph-h .av{width:32px;height:32px;font-size:14px}
+.pimg{aspect-ratio:1;background-size:cover;background-position:center;width:100%}
+.pact{display:flex;gap:16px;padding:10px 12px 4px;font-size:26px}
+.pact button.liked{color:#ff3040}
+.ptxt{padding:0 12px;font-size:14px;line-height:1.35}.ptxt small{display:block;color:#8e8e93;margin-top:4px;font-size:12px}
+.igtabs{position:absolute;left:0;right:0;bottom:0;height:84px;background:#fff;border-top:.5px solid #dbdbdb;display:flex;justify-content:space-around;padding-top:10px;font-size:25px;z-index:2}
+.igtabs button{opacity:.55;height:34px}.igtabs button.on{opacity:1}
+.igtabs .avs{width:28px;height:28px;border-radius:50%;background:#aeaeb2;margin:2px auto}
+.pfh{display:flex;align-items:center;gap:22px;padding:16px}
+.pfh .av{width:84px;height:84px;font-size:32px}
+.stats{display:flex;flex:1;justify-content:space-around;text-align:center;font-size:13px}
+.stats b{display:block;font-size:17px}
+.pfn{padding:0 16px 10px;font-size:14px;line-height:1.35;white-space:pre-wrap}
+.edit{display:block;margin:0 16px 14px;width:calc(100% - 32px);padding:8px;border-radius:8px;background:#efefef;text-align:center;font-weight:600;font-size:14px}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.pgrid div{aspect-ratio:1;background-size:cover;background-position:center}
+#bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
+</style>
+</head>
+<body>
+<div id="phone" class="locked">
+  <div id="wall"></div>
+  <div id="wallimg"></div>
+  <div id="island"></div>
+  <div id="status"><span id="hora">9:41</span><span class="r">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+    <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1-1.1A10.2 10.2 0 0 0 8.5.8C5.800.8 3.300 1.800 1.500 3.600l1 1.100a8.700 8.700 0 0 1 6-2.400zm0 3.400c1.400 0 2.700.5 3.700 1.400l1-1.100a7.100 7.100 0 0 0-9.400 0l1 1.100c1-.9 2.300-1.400 3.700-1.400zM8.500 9a2.200 2.200 0 0 0-1.500.6L8.500 11.200l1.500-1.600A2.200 2.200 0 0 0 8.500 9z"/></svg>
+    <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.500" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="9" rx="2"/><rect x="24" y="4.500" width="2" height="4" rx="1" opacity=".5"/></svg>
+  </span></div>
+
+  <div id="home">
+    <div class="widget"><div class="l"><small id="wDia"></small><b id="wNum"></b><span id="wMes"></span></div><div class="rr" id="wEv"></div></div>
+    <div id="grid"></div>
+    <div id="dock"></div>
+  </div>
+
+  <section class="app" id="app-mensajes"><div class="big">Mensajes</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="msgList"></div></div><div class="detail" id="msgChat"></div></section>
+  <section class="app" id="app-notas"><div class="big">Notas</div><div class="search">🔍 Buscar</div><div class="body"><div class="group" id="noteList"></div></div><div class="detail" id="noteView"></div></section>
+  <section class="app" id="app-fotos" style="background:#fff"><div class="big">Recientes</div><div class="body" style="padding-bottom:90px"><div id="photos"></div></div><div class="tabs"><div class="on">🖼️<br>Biblioteca</div><div>💜<br>Para ti</div><div>📁<br>Álbumes</div></div><div class="detail full" id="photoView"></div></section>
+  <section class="app" id="app-calendario" style="background:#fff"><div class="mh"><button id="prevM">‹</button><h2 id="monthName"></h2><button id="nextM">›</button></div><div class="cal" id="cal"></div><div class="body" id="evList" style="background:#f2f2f7;padding-top:4px"></div></section>
+  <section class="app" id="app-music"><div style="padding:0 12px"></div><div class="body"><div class="art" id="art">♫</div><div class="np"><h2 id="mTitle"></h2><p id="mArtist"></p></div><div class="prog"><div id="mProg"></div></div><div class="ctl"><button id="mPrev"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.500 12 18 18V6z"/></svg></button><button id="mPlay"></button><button id="mNext"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.500-6L6 6z"/></svg></button></div><div class="q" id="mQueue"></div></div></section>
+
+  <section class="app" id="app-insta" style="background:#fff"><div class="igtop" id="igTop"></div><div class="body" style="padding-bottom:100px"><div id="igFeed"><div class="stories" id="igStories"></div><div id="igPosts"></div></div><div id="igPerfil" style="display:none"></div></div><div class="igtabs"><button data-igtab="feed" class="on">🏠</button><button>🔍</button><button>➕</button><button>🎬</button><button data-igtab="perfil"><div class="avs" id="igAvs"></div></button></div></section>
+
+  <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
+  <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
+  <div id="bar-home" title="Inicio"></div>
+</div>
+
+<script>
+/* ============================================================
+   AQUÍ EDITAS EL CONTENIDO. Todo lo que está entre comillas "..."
+   es texto que puedes cambiar. Es contenido de ejemplo.
+   ============================================================ */
+const DATA = {
+  /* Fondo de pantalla (opcional): sube la imagen a la carpeta img y
+     escribe aquí su nombre, por ejemplo: "img/fondo.jpg". Vacío = degradado. */
+  fondo: "img/ellos y mel.JPG",
+  /* Código para desbloquear el teléfono (4 números) */
+  codigo: "1134",
+  /* Instagram de Armando. Todo es contenido de ejemplo. "src" vacío = cuadro de color. */
+  instagram: {
+    usuario: "usuario",
+    nombre: "Nombre",
+    bio: "Escribe aquí la biografía.",
+    avatar: "",
+    seguidores: "123",
+    seguidos: "456",
+    historias: [ { nombre: "Amigo 1" }, { nombre: "Amigo 2" }, { nombre: "Amigo 3" } ],
+    publicaciones: [
+      { src: "", texto: "Pie de foto de ejemplo 1.", likes: 12, fecha: "hace 2 horas" },
+      { src: "", texto: "Pie de foto de ejemplo 2.", likes: 30, fecha: "hace 3 días" },
+      { src: "", texto: "Pie de foto de ejemplo 3.", likes: 8,  fecha: "hace 1 semana" }
+    ]
+  },
+  mensajes: [
+    { nombre: "Contacto 1", hora: "09:12", chat: [
+      { dia: "Lunes 09:10" },
+      { yo: false, t: "Aquí va un mensaje de Contacto 1." },
+      { yo: true,  t: "Aquí va la respuesta de Armando." }
+    ]},
+    { nombre: "Contacto 2", hora: "Ayer", chat: [
+      { dia: "Ayer 21:40" },
+      { yo: false, t: "Otro mensaje de ejemplo." },
+      { yo: true,  t: "Y otra respuesta de ejemplo." }
+    ]}
+  ],
+  notas: [
+    { titulo: "Nota 1", fecha: "20 oct 2026", texto: "Escribe aquí el texto de la primera nota de Armando." },
+    { titulo: "Nota 2", fecha: "18 oct 2026", texto: "Escribe aquí el texto de la segunda nota.\nPuedes usar varias líneas." }
+  ],
+  /* Para usar una foto tuya: sube la imagen a la carpeta img del repositorio
+     y escribe su nombre en "src", por ejemplo: src: "img/foto1.jpg"
+     Si dejas "src" vacío se muestra un cuadro de color. */
+  fotos: [
+    { src: "", pie: "Foto 1" }, { src: "", pie: "Foto 2" }, { src: "", pie: "Foto 3" },
+    { src: "", pie: "Foto 4" }, { src: "", pie: "Foto 5" }, { src: "", pie: "Foto 6" }
+  ],
+  /* Fecha en formato AAAA-MM-DD */
+  eventos: [
+    { fecha: "2026-10-25", titulo: "Evento de ejemplo 1", hora: "10:00" },
+    { fecha: "2026-10-30", titulo: "Evento de ejemplo 2", hora: "18:30" }
+  ],
+  musica: [
+    { titulo: "Canción 1", artista: "Artista 1" },
+    { titulo: "Canción 2", artista: "Artista 2" },
+    { titulo: "Canción 3", artista: "Artista 3" }
+  ]
+};
+/* ============================================================ */
+
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,"0");
+const colores = ["linear-gradient(#a5a5ad,#7c7c85)","linear-gradient(#ff9f6b,#f0623c)","linear-gradient(#6bc5ff,#2f86e8)","linear-gradient(#6be29a,#26a864)","linear-gradient(#b79bff,#7a5ae0)","linear-gradient(#ff8fb1,#e0467f)"];
+if(DATA.fondo) $("#wallimg").style.backgroundImage = `url("${encodeURI(DATA.fondo)}")`;
+
+/* Hora y fecha reales */
+function reloj(){
+  const d = new Date();
+  const hh = d.toLocaleTimeString("es",{hour:"numeric",minute:"2-digit",hour12:false});
+  $("#hora").textContent = hh; $("#lTime").textContent = hh;
+  $("#lDate").textContent = d.toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"});
+  $("#wDia").textContent = d.toLocaleDateString("es",{weekday:"long"});
+  $("#wNum").textContent = d.getDate();
+  $("#wMes").textContent = d.toLocaleDateString("es",{month:"long",year:"numeric"});
+  const w = document.querySelector(".ic-cal");
+  if(w){ w.querySelector("small").textContent = d.toLocaleDateString("es",{weekday:"short"}).replace(".",""); w.querySelector("b").textContent = d.getDate(); }
+  const hoy = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const prox = DATA.eventos.filter(e=>e.fecha>=hoy).sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(0,2);
+  $("#wEv").innerHTML = prox.length ? prox.map(e=>`<p>${e.titulo}<em>${e.fecha.split("-").reverse().join("/")} ${e.hora||""}</em></p>`).join("") : `<p style="opacity:.7">No hay más eventos</p>`;
+}
+
+/* Iconos */
+const ICONOS = {
+  mensajes:'<div class="ic ic-msg"><svg width="36" height="34" viewBox="0 0 36 34"><path fill="#fff" d="M18 2C9 2 2 8 2 15.500c0 4.200 2.200 7.900 5.600 10.300C7.200 28.500 6 30.700 4 32.500c3.500-.2 6.600-1.500 8.600-3.100 1.700.4 3.500.6 5.400.6 9 0 16-6 16-13.500S27 2 18 2z"/></svg></div>',
+  notas:'<div class="ic ic-notas"></div>',
+  fotos:'<div class="ic ic-fotos"><i></i></div>',
+  calendario:'<div class="ic ic-cal"><small></small><b></b></div>',
+  music:'<div class="ic ic-music">♫</div>',
+  insta:'<div class="ic ic-insta"><i></i></div>'
+};
+const NOMBRES = {mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram"};
+const btn = id => `<button class="app-i" data-app="${id}">${ICONOS[id]}<span>${NOMBRES[id]}</span></button>`;
+$("#grid").innerHTML = ["calendario","fotos","music","insta"].map(btn).join("");
+$("#dock").innerHTML = ["mensajes","notas"].map(btn).join("");
+reloj(); setInterval(reloj,15000);
+
+/* Navegación */
+let actual = null;
+function abrir(id){
+  actual = $("#app-"+id); actual.classList.add("on");
+  $("#status").classList.toggle("dark", id!=="music" && id!=="fotos" ? true : id==="fotos");
+}
+function inicio(){
+  document.querySelectorAll(".app.on").forEach(a=>{a.classList.remove("on");a.querySelectorAll(".detail.on").forEach(d=>d.classList.remove("on"));});
+  actual = null; $("#status").classList.remove("dark");
+}
+function atras(){
+  if(!actual) return;
+  const d = actual.querySelector(".detail.on");
+  if(d){ d.classList.remove("on"); if(d.id==="photoView") $("#status").classList.add("dark"); } else inicio();
+}
+document.addEventListener("click", e=>{
+  const a = e.target.closest("[data-app]"); if(a) abrir(a.dataset.app);
+  if(e.target.closest("[data-back]")) atras();
+});
+/* Pantalla de bloqueo: toca o desliza hacia arriba para desbloquear */
+const lockEl = $("#lock"), phone = $("#phone");
+function desbloquear(){ lockEl.style.transform=""; lockEl.classList.add("off"); phone.classList.remove("locked"); }
+function bloquear(){ inicio(); ocultarPass(); lockEl.classList.remove("off"); phone.classList.add("locked"); }
+let y0 = null, dy = 0;
+lockEl.addEventListener("pointerdown", e=>{ y0 = e.clientY; dy = 0; lockEl.style.transition = "none"; });
+window.addEventListener("pointermove", e=>{ if(y0===null) return; dy = Math.min(0, e.clientY - y0); lockEl.style.transform = `translateY(${dy}px)`; });
+window.addEventListener("pointerup", ()=>{
+  if(y0===null) return; y0 = null; lockEl.style.transition = "";
+  lockEl.style.transform = ""; if(dy < -80 || Math.abs(dy) < 8) mostrarPass();
+});
+$("#bar-home").onclick = ()=>{ if(phone.classList.contains("locked")){ if(!$("#pass").classList.contains("on")) mostrarPass(); } else inicio(); };
+
+/* Teclado numérico para el código */
+const LETRAS = {2:"ABC",3:"DEF",4:"GHI",5:"JKL",6:"MNO",7:"PQRS",8:"TUV",9:"WXYZ"};
+let ent = "";
+$("#keys").innerHTML = [1,2,3,4,5,6,7,8,9,"v",0,"v"].map(k => k==="v" ? `<div class="key v"></div>` : `<button class="key" data-k="${k}">${k}<small>${LETRAS[k]||""}</small></button>`).join("");
+function puntos(){ $("#dots").innerHTML = [0,1,2,3].map(i=>`<div class="dot ${i<ent.length?"f":""}"></div>`).join(""); }
+function mostrarPass(){ ent = ""; puntos(); $("#pass").classList.add("on"); }
+function ocultarPass(){ $("#pass").classList.remove("on"); }
+$("#pCancel").onclick = ocultarPass;
+$("#keys").onclick = e=>{
+  const k = e.target.closest("[data-k]"); if(!k || ent.length>=4) return;
+  ent += k.dataset.k; puntos();
+  if(ent.length===4) setTimeout(()=>{
+    if(ent===DATA.codigo){ ocultarPass(); desbloquear(); }
+    else { $("#dots").classList.add("shake"); setTimeout(()=>{ $("#dots").classList.remove("shake"); ent=""; puntos(); },420); }
+  },150);
+};
+$("#island").onclick = bloquear;  /* tocar la isla dinámica bloquea el teléfono */
+const dbar = (vol,mid) => `<div class="dbar"><button data-back>‹ ${vol}</button><div class="mid">${mid||""}</div><span style="width:60px"></span></div>`;
+
+/* Mensajes */
+$("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
+  const ult = [...m.chat].reverse().find(x=>x.t);
+  return `<button class="row" data-m="${i}"><div class="av" style="background:${colores[i%6]}">${m.nombre[0]}</div><div class="t"><b>${m.nombre}</b><span>${ult?ult.t:""}</span></div><small>${m.hora}</small></button>`;
+}).join("");
+$("#msgList").onclick = e=>{
+  const r = e.target.closest("[data-m]"); if(!r) return;
+  const i = +r.dataset.m, m = DATA.mensajes[i];
+  const ultimoYo = m.chat.map(x=>!!x.yo).lastIndexOf(true);
+  $("#msgChat").innerHTML = dbar("Mensajes",`<div class="av" style="background:${colores[i%6]}">${m.nombre[0]}</div>${m.nombre}`) +
+    `<div class="scroll"><div class="chat">` + m.chat.map((x,k)=>
+      x.dia ? `<div class="day">${x.dia}</div>` : `<div class="b ${x.yo?"me":"you"}">${x.t}</div>` + (k===ultimoYo?`<div class="entreg">Entregado</div>`:"")).join("") +
+    `</div></div><div class="input"><i>+</i><div>iMessage</div></div>`;
+  $("#msgChat").classList.add("on");
+  const s = $("#msgChat .scroll"); s.scrollTop = s.scrollHeight;
+};
+
+/* Notas */
+$("#noteList").innerHTML = DATA.notas.map((n,i)=>
+  `<button class="row nrow" data-n="${i}"><div class="t"><b>${n.titulo}</b><span>${n.fecha||""}  ${n.texto.split("\n")[0]}</span></div></button>`).join("");
+$("#noteList").onclick = e=>{
+  const r = e.target.closest("[data-n]"); if(!r) return;
+  const n = DATA.notas[r.dataset.n];
+  $("#noteView").innerHTML = dbar("Notas") + `<div class="scroll"><div class="note"><small>${n.fecha||""}</small><h2>${n.titulo}</h2>${n.texto}</div></div>`;
+  $("#noteView").classList.add("on");
+};
+
+/* Fotos */
+const fondo = (f,i) => f.src ? `background-image:url('${f.src}')` : `background:${colores[i%6]}`;
+$("#photos").innerHTML = DATA.fotos.map((f,i)=>`<button class="ph" data-f="${i}" style="${fondo(f,i)}"></button>`).join("");
+$("#photos").onclick = e=>{
+  const r = e.target.closest("[data-f]"); if(!r) return;
+  const i = +r.dataset.f, f = DATA.fotos[i];
+  $("#photoView").innerHTML = dbar("Fotos") + `<div class="scroll"><div class="im" style="${fondo(f,i)}"></div><p>${f.pie||""}</p></div>`;
+  $("#photoView").classList.add("on"); $("#status").classList.remove("dark");
+};
+
+/* Calendario */
+let mes = new Date(); mes.setDate(1); let diaSel = null;
+function calendario(){
+  const y = mes.getFullYear(), m = mes.getMonth();
+  $("#monthName").textContent = mes.toLocaleDateString("es",{month:"long",year:"numeric"});
+  const primero = (new Date(y,m,1).getDay()+6)%7, dias = new Date(y,m+1,0).getDate(), hoy = new Date();
+  let h = ["L","M","X","J","V","S","D"].map(x=>`<div class="wd">${x}</div>`).join("");
+  for(let i=0;i<primero;i++) h += "<div></div>";
+  for(let d=1; d<=dias; d++){
+    const k = `${y}-${pad(m+1)}-${pad(d)}`;
+    const cls = [(d===hoy.getDate()&&m===hoy.getMonth()&&y===hoy.getFullYear())?"today":"", k===diaSel?"sel":"", DATA.eventos.some(e=>e.fecha===k)?"has":""].join(" ");
+    h += `<div class="${cls}" data-d="${k}"><span>${d}</span></div>`;
+  }
+  $("#cal").innerHTML = h;
+  const lista = DATA.eventos.filter(e => diaSel ? e.fecha===diaSel : e.fecha.startsWith(`${y}-${pad(m+1)}`));
+  $("#evList").innerHTML = lista.length
+    ? lista.sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(e=>`<div class="ev"><b>${e.titulo}</b><span>${e.fecha.split("-").reverse().join("/")} · ${e.hora||""}</span></div>`).join("")
+    : `<div class="empty">No hay eventos</div>`;
+}
+$("#prevM").onclick = ()=>{mes.setMonth(mes.getMonth()-1);diaSel=null;calendario();};
+$("#nextM").onclick = ()=>{mes.setMonth(mes.getMonth()+1);diaSel=null;calendario();};
+$("#cal").onclick = e=>{const d=e.target.closest("[data-d]"); if(!d) return; diaSel = diaSel===d.dataset.d?null:d.dataset.d; calendario();};
+calendario();
+
+/* Música (controles visuales, sin sonido) */
+$("#app-music").firstElementChild.innerHTML = `<div class="dbar" style="background:none;border:0"><button data-back>‹ Inicio</button></div>`;
+const PLAY = '<svg width="58" height="58" viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg>', PAUSA = '<svg width="58" height="58" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+let ci = 0, sonando = false, prog = 0;
+function musica(){
+  const c = DATA.musica[ci];
+  $("#mTitle").textContent = c.titulo; $("#mArtist").textContent = c.artista;
+  $("#mPlay").innerHTML = sonando ? PAUSA : PLAY; $("#art").classList.toggle("play", sonando);
+  $("#mProg").style.width = prog + "%";
+  $("#mQueue").innerHTML = DATA.musica.map((s,i)=>`<button data-s="${i}" class="${i===ci?"cur":""}">${s.titulo}<br><small>${s.artista}</small></button>`).join("");
+}
+$("#mPlay").onclick = ()=>{sonando=!sonando;musica();};
+$("#mNext").onclick = ()=>{ci=(ci+1)%DATA.musica.length;prog=0;musica();};
+$("#mPrev").onclick = ()=>{ci=(ci-1+DATA.musica.length)%DATA.musica.length;prog=0;musica();};
+$("#mQueue").onclick = e=>{const s=e.target.closest("[data-s]"); if(!s) return; ci=+s.dataset.s;prog=0;sonando=true;musica();};
+setInterval(()=>{ if(sonando){ prog+=1.2; if(prog>=100){prog=0;ci=(ci+1)%DATA.musica.length;} musica(); } },1000);
+musica();
+
+/* Instagram */
+const IG = DATA.instagram;
+const igFondo = (src,i) => src ? `background-image:url('${src}')` : `background:${colores[i%6]}`;
+const igAv = (i,t) => IG.avatar ? `background-image:url('${IG.avatar}');background-size:cover` : `background:${colores[i%6]}`;
+$("#igAvs").setAttribute("style", IG.avatar ? `background-image:url('${IG.avatar}');background-size:cover` : "");
+$("#igStories").innerHTML = [{nombre:"Tu historia",yo:true}, ...IG.historias].map((h,i)=>
+  `<div class="st"><div class="ring ${h.yo?"yo":""}"><div class="av" style="${h.yo?igAv(0):"background:"+colores[(i+2)%6]}">${h.yo?IG.nombre[0]:h.nombre[0]}</div></div>${h.nombre}</div>`).join("");
+const likes = IG.publicaciones.map(p=>({n:p.likes,on:false}));
+function igPosts(){
+  $("#igPosts").innerHTML = IG.publicaciones.map((p,i)=>
+    `<div class="post"><div class="ph-h"><div class="av" style="${igAv(0)}">${IG.nombre[0]}</div>${IG.usuario}</div>
+     <div class="pimg" style="${igFondo(p.src,i)}"></div>
+     <div class="pact"><button data-like="${i}" class="${likes[i].on?"liked":""}">${likes[i].on?"♥":"♡"}</button><span>💬</span><span>✈️</span></div>
+     <div class="ptxt"><b>Les gusta a ${likes[i].n} personas</b><br><b>${IG.usuario}</b> ${p.texto}<small>${p.fecha||""}</small></div></div>`).join("");
+}
+igPosts();
+$("#igPosts").onclick = e=>{ const b = e.target.closest("[data-like]"); if(!b) return; const l = likes[b.dataset.like]; l.on = !l.on; l.n += l.on ? 1 : -1; igPosts(); };
+$("#igPerfil").innerHTML = `<div class="pfh"><div class="av" style="${igAv(0)}">${IG.nombre[0]}</div><div class="stats"><div><b>${IG.publicaciones.length}</b>publicaciones</div><div><b>${IG.seguidores}</b>seguidores</div><div><b>${IG.seguidos}</b>seguidos</div></div></div>
+  <div class="pfn"><b>${IG.nombre}</b>\n${IG.bio}</div><button class="edit">Editar perfil</button>
+  <div class="pgrid">${IG.publicaciones.map((p,i)=>`<div style="${igFondo(p.src,i)}"></div>`).join("")}</div>`;
+function igTab(t){
+  $("#igFeed").style.display = t==="feed" ? "" : "none"; $("#igPerfil").style.display = t==="perfil" ? "" : "none";
+  $("#igTop").innerHTML = t==="feed" ? `<div class="word">Instagram</div><span>♡ ✉️</span>` : `<b>${IG.usuario}</b><span>☰</span>`;
+  document.querySelectorAll("[data-igtab]").forEach(b=>b.classList.toggle("on", b.dataset.igtab===t));
+}
+igTab("feed");
+document.querySelectorAll("[data-igtab]").forEach(b=>b.onclick = ()=>igTab(b.dataset.igtab));
+</script>
+</body>
+</html>
