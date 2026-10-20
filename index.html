@@ -4,101 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iPhone de Armando</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #0f172a;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
-            user-select: none;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Chasis del iPhone */
-        .phone-frame {
+        body {
+            background-color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Marco del iPhone */
+        .iphone-frame {
             width: 380px;
             height: 780px;
-            border-radius: 50px;
-            box-shadow: 0 0 0 11px #1e293b, 0 0 0 13px #334155, 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+            border-radius: 48px;
+            box-shadow: 0 0 0 10px #2d2d2d, 0 20px 50px rgba(0, 0, 0, 0.8);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 16px;
+            /* Fondo de pantalla de la familia */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('img/ellos y mel.JPG') center/cover no-repeat;
+            background-color: #000;
         }
 
-        /* Fondo de pantalla */
-        .phone-wallpaper {
-            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.6) 100%),
-                        url('img/ellos y mel.JPG') center/cover no-repeat,
-                        linear-gradient(135deg, #1e3a8a, #3b82f6);
+        /* Barra de estado */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0 8px;
+            margin-top: 10px;
         }
 
-        /* Cristal del Dock tipo iOS */
-        .ios-glass {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Rejilla de íconos */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 12px;
+            margin-top: 30px;
         }
 
-        /* Efecto al presionar un ícono */
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
         .app-icon {
-            transition: transform 0.15s ease, filter 0.15s ease;
-        }
-        .app-icon:active {
-            transform: scale(0.88);
-            filter: brightness(0.85);
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
         }
 
-        /* Pantallas pequeñas (móviles) */
+        .app-icon:active {
+            transform: scale(0.9);
+        }
+
+        .app-label {
+            font-size: 11px;
+            margin-top: 6px;
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* Colores de íconos */
+        .icon-fotos { background: #ffffff; }
+        .icon-notas { background: #ffcc00; color: #000; }
+        .icon-mensajes { background: #34c759; color: #fff; }
+        .icon-llamadas { background: #30d158; color: #fff; }
+
+        /* Dock translúcido */
+        .dock {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        /* Ajuste para móviles */
         @media (max-width: 420px) {
-            body {
-                padding: 0 !important;
-                background-color: #000;
-            }
-            .phone-frame {
+            body { background: #000; }
+            .iphone-frame {
                 width: 100vw;
                 height: 100vh;
                 border-radius: 0;
                 box-shadow: none;
             }
-            .notch {
-                display: none;
-            }
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <!-- MARCO DEL IPHONE -->
-    <div class="phone-frame phone-wallpaper flex flex-col justify-between p-5 text-white">
-
-        <!-- Barra Superior (Status Bar + Isla Dinámica) -->
-        <div class="pt-2">
-            <!-- Dynamic Island -->
-            <div class="notch absolute top-3 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full flex items-center justify-between px-2.5 z-50">
-                <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-800"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-blue-950/40 border border-blue-900/50 flex items-center justify-center">
-                    <div class="w-1 h-1 rounded-full bg-blue-500/80"></div>
-                </div>
-            </div>
-
-            <!-- Hora e Íconos de Estado -->
-            <div class="flex justify-between items-center px-2 pt-1 text-xs font-semibold tracking-tight">
-                <span id="clock" class="text-sm font-bold">09:41</span>
-                <div class="flex items-center gap-1.5 text-xs">
-                    <i class="fa-solid fa-signal"></i>
-                    <i class="fa-solid fa-wifi"></i>
-                    <i class="fa-solid fa-battery-three-quarters text-sm"></i>
-                </div>
-            </div>
-
-            <!-- Widget de Fecha -->
-            <div class="mt-6 text-center">
-                <p id="date-display" class="text-xs uppercase tracking-widest font-medium opacity-90 drop-shadow-md">Martes, 24 de Octubre</p>
-            </div>
+    <div class="iphone-frame">
+        <!-- Barra superior -->
+        <div class="status-bar">
+            <span>09:41</span>
+            <span>LTE 🔋</span>
         </div>
 
-        <!-- REJILLA DE APLICACIONES -->
-        <div class="grid grid-cols-4 gap-y-6 gap-x-3 px-1 my-auto">
+        <!-- Aplicaciones principales -->
+        <div class="app-grid">
             
-            <!-- App: Galería (Fotos) -->
-            <a href="galerija/galerija.html" class="flex flex-col items-center gap-1.5 group">
-                <div class="app-icon w-14 h-14
+            <!-- Fotos -->
+            <a href="galerija/galerija.html" class="app-item">
+                <div class="app-icon icon-fotos">🖼️</div>
+                <span class="app-label">Fotos</span>
+            </a>
+
+            <!-- Notas -->
+            <a href="beleske/beleske.html" class="app-item">
+                <div class="app-icon icon-notas">📝</div>
+                <span class="app-label">Notas</span>
+            </a>
+
+            <!-- Mensajes -->
+            <a href="poruke/poruke.html" class="app-item">
+                <div class="app-icon icon-mensajes">💬</div>
+                <span class="app-label">Mensajes</span>
+            </a>
+
+            <!-- Llamadas -->
+            <a href="poziv/poziv.html" class="app-item">
+                <div class="app-icon icon-llamadas">📞</div>
+                <span class="app-label">Teléfono</span>
+            </a>
+
+        </div>
+
+        <div></div><!-- Espaciador -->
+
+        <!-- Dock inferior -->
+        <div class="dock">
+            <a href="poruke/poruke.html" class="app-item">
+                <div class="app-icon icon-mensajes">💬</div>
+            </a>
+            <a href="poziv/poziv.html" class="app-item">
+                <div class="app-icon icon-llamadas">📞</div>
+            </a>
+            <a href="galerija/galerija.html" class="app-item">
+                <div class="app-icon icon-fotos">🖼️</div>
+            </a>
+            <a href="beleske/beleske.html" class="app-item">
+                <div class="app-icon icon-notas">📝</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
