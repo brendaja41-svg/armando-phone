@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotos - Armando</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 30px;
+        }
+        .galeria-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #1c1c1e;
+        }
+        .galeria-titulo {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .back-btn {
+            color: #0a84ff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .album-seccion {
+            padding: 16px;
+        }
+        .album-titulo {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #f2f2f7;
+        }
+        .fotos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .foto-card {
+            background-color: #1c1c1e;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .foto-img-real {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .foto-info {
+            padding: 10px;
+        }
+        .foto-pie {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .foto-sub {
+            font-size: 11px;
+            color: #8e8e93;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="galeria-header">
+        <a href="../index.html" class="back-btn">‹ Inicio</a>
+        <span class="galeria-titulo">Recuerdos</span>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div class="album-seccion">
+        <div class="album-titulo">Álbum Familiar ❤️</div>
+        <div class="fotos-grid">
+            
+            <!-- Foto: Selfie de ambos -->
+            <div class="foto-card">
+                <img src="../img/selfie.JPG" alt="Selfie juntos" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Nosotros</div>
+                    <div class="foto-sub">Días tranquilos</div>
+                </div>
+            </div>
+
+            <!-- Foto: Solo Bri -->
+            <div class="foto-card">
+                <img src="../img/solo bri.JPG" alt="Solo Bri" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Brian ❤️</div>
+                    <div class="foto-sub">Mi foto favorita de ti</div>
+                </div>
+            </div>
+
+            <!-- Foto: Ellos y Melody -->
+            <div class="foto-card">
+                <img src="../img/ellos y mel.JPG" alt="Ellos y Melody" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Familia completa</div>
+                    <div class="foto-sub">Con nuestra pequeña</div>
+                </div>
+            </div>
+
+            <!-- Foto: Bri y Mel -->
+            <div class="foto-card">
+                <img src="../img/bri y mel.JPG" alt="Bri y Mel" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Papá e hija</div>
+                    <div class="foto-sub">Sus cómplices de siempre</div>
+                </div>
+            </div>
+
+            <!-- Foto: Ballet de Melody -->
+            <div class="foto-card">
+                <img src="../img/ballet.JPG" alt="Melody en ballet" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Clase de ballet</div>
+                    <div class="foto-sub">Melody en el escenario</div>
+                </div>
+            </div>
+
+            <!-- Foto: Abrazo -->
+            <div class="foto-card">
+                <img src="../img/abrazo.JPG" alt="Abrazo" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Tu abrazo</div>
+                    <div class="foto-sub">Donde siempre estuve a salvo</div>
+                </div>
+            </div>
+
+            <!-- Foto: Cena -->
+            <div class="foto-card">
+                <img src="../img/cena.JPG" alt="Cena juntos" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Cena de aniversario</div>
+                    <div class="foto-sub">Celebrando la vida</div>
+                </div>
+            </div>
+
+            <!-- Foto: Broma -->
+            <div class="foto-card">
+                <img src="../img/broma.JPG" alt="Broma" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Tus bromas</div>
+                    <div class="foto-sub">Extraño tanto tu risa</div>
+                </div>
+            </div>
+
+            <!-- Foto: Manejando -->
+            <div class="foto-card">
+                <img src="../img/manejando.JPG" alt="Manejando" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">En el camino</div>
+                    <div class="foto-sub">Viaje de fin de semana</div>
+                </div>
+            </div>
+
+            <!-- Foto: Jugando -->
+            <div class="foto-card">
+                <img src="../img/jugando.JPG" alt="Jugando con Melody" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Tarde de juegos</div>
+                    <div class="foto-sub">Melody y sus risas</div>
+                </div>
+            </div>
+
+            <!-- Foto: Educación / Maestría -->
+            <div class="foto-card">
+                <img src="../img/educacion.JPG" alt="Educación" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Días de universidad</div>
+                    <div class="foto-sub">Cuando todo comenzaba</div>
+                </div>
+            </div>
+
+            <!-- Foto: Manos y Mel -->
+            <div class="foto-card">
+                <img src="../img/manos y mel.JPG" alt="Manos y Melody" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Manos juntas</div>
+                    <div class="foto-sub">Promesa de no soltarte</div>
+                </div>
+            </div>
+
+            <!-- Foto: Hospital -->
+            <div class="foto-card">
+                <img src="../img/hospi.JPG" alt="En el hospital" class="foto-img-real">
+                <div class="foto-info">
+                    <div class="foto-pie">Habitación 304</div>
+                    <div class="foto-sub">Aquí sigo contigo, Brian</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
