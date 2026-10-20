@@ -194,16 +194,6 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 #pgdots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4)}
 #pgdots i.on{background:#fff}
 @media(max-height:760px){#pill,#pgdots{display:none}}
- #notif{position:absolute;left:10px;right:10px;top:60px;z-index:65;display:flex;gap:11px;align-items:center;padding:12px 14px;border-radius:22px;background:rgba(235,235,240,.88);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);color:#000;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35);transform:translateY(-140%);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
-#notif.on{transform:none;opacity:1;pointer-events:auto}
-#phone.locked #notif{top:auto;bottom:130px;transform:translateY(30px)}
-#phone.locked #notif.on{transform:none}
-.nic{width:38px;height:38px;border-radius:9px;background:linear-gradient(#67f07d,#0fbf3e);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}
-.ntx{flex:1;min-width:0}
-.nh{display:flex;justify-content:space-between;font-size:15px}
-.nh small{color:#6e6e73;font-size:13px}
-.nb{font-size:15px;line-height:1.25;margin-top:1px}
-.row.nuevo::after{content:"";position:absolute;left:3px;top:50%;margin-top:-5px;width:10px;height:10px;border-radius:50%;background:#0a84ff}
   #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -236,7 +226,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
   <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
-   <div id="notif"><div class="nic">💬</div><div class="ntx"><div class="nh"><b>Mamá</b><small>ahora</small></div><div class="nb">¿Ya comiste algo?</div></div></div>
+ 
   <div id="bar-home" title="Inicio"></div>
 </div>
 
@@ -281,26 +271,6 @@ const DATA = {
     ]
   },
     mensajes: [
-          { nombre: "Mamá", hora: "Ahora", nuevo: true, chat: [
-      { dia: "Martes 29 sep 23:40" },
-      { yo: false, t: "Hijo, acabo de ver tu mensaje. Ya voy para el hospital, no te muevas de ahí." },
-      { yo: true,  t: "Mamá, no sé qué hacer. Brian no despierta." },
-      { yo: false, t: "Aquí estoy, mi vida. Respira. Ya casi llego." },
-      { dia: "Jueves 1 oct 08:30" },
-      { yo: false, t: "¿Dormiste algo anoche?" },
-      { yo: true,  t: "Un poco, en la silla del cuarto." },
-      { yo: false, t: "Te dejé comida en la mochila de Melody. Por favor come algo." },
-      { dia: "Sábado 10 oct 19:05" },
-      { yo: false, t: "Melody se quedó dormida abrazando su peluche. Yo la arropé, tú quédate tranquilo con Brian." },
-      { yo: true,  t: "Gracias, mamá." },
-      { dia: "Domingo 18 oct 22:30" },
-      { yo: false, t: "No me contestas y me preocupo. Sé que estás cansado, pero tienes que cuidarte tú también." },
-      { yo: false, t: "Melody te necesita entero. Y Brian va a necesitar que estés fuerte cuando despierte." },
-      { yo: true,  t: "Estoy bien, mamá. Solo cansado." },
-      { yo: false, t: "Te quiero mucho, hijo." },
-      { dia: "Hoy 21:52" },
-      { yo: false, t: "¿Ya comiste algo?" }
-    ]},
         { nombre: "Mi amor ❤️", hora: "Ayer", foto: "img/solo bri.JPG", chat: [
       { dia: "Martes 29 sep 18:05" },
       { yo: false, t: "Ya salí del trabajo, ¿necesitas algo del súper?" },
@@ -461,7 +431,7 @@ const avHtml = (nombre,i,foto) => foto ? `<div class="av avf" style="background-
 function listaMsg(){
   $("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
     const ult = [...m.chat].reverse().find(x=>x.t);
-    return <button class="row ${m.nuevo?"nuevo":""}" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
+    return `<button class="row" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
   }).join("");
 }
 let mi = 0;
@@ -612,34 +582,6 @@ function llamar(){
 }
 $("#callList").onclick = e=>{ if(e.target.closest("[data-call]")) llamar(); };
 $("#callView").onclick = e=>{ if(e.target.closest("[data-end]")){ callTok++; $("#callView").classList.remove("on"); $("#status").classList.add("dark"); } };
-/* Notificación de Mamá */
-let notifTimer, notifVista = false, pendiente = false;
-function ocultarNotif(){ clearTimeout(notifTimer); $("#notif").classList.remove("on"); }
-function programarOcultar(){ clearTimeout(notifTimer); notifTimer = setTimeout(ocultarNotif, 8000); }
-function abrirChatMama(){
-  const i = DATA.mensajes.findIndex(m=>m.nombre==="Mamá"); if(i<0) return;
-  inicio(); abrir("mensajes"); DATA.mensajes[i].nuevo = false; listaMsg(); chatMsg(i);
-}
-setTimeout(()=>{
-  if(notifVista) return;
-  $("#notif").classList.add("on");
-  if(!phone.classList.contains("locked")) programarOcultar();
-}, 3000);
-const desbloquearOrig = desbloquear;
-desbloquear = function(){
-  desbloquearOrig();
-  if(pendiente){ pendiente = false; notifVista = true; ocultarNotif(); setTimeout(abrirChatMama, 700); }
-  else if($("#notif").classList.contains("on")) programarOcultar();
-};
-$("#notif").onclick = ()=>{
-  ocultarNotif();
-  if(phone.classList.contains("locked")){ pendiente = true; mostrarPass(); }
-  else { notifVista = true; abrirChatMama(); }
-};
-$("#msgList").addEventListener("click", e=>{
-  const r = e.target.closest("[data-m]");
-  if(r){ DATA.mensajes[+r.dataset.m].nuevo = false; setTimeout(listaMsg, 500); }
-});
 </script>
 </body>
 </html>
