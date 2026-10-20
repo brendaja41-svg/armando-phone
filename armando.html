@@ -171,6 +171,13 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .cmsg{margin:26px 30px 0;padding:14px 16px;background:rgba(255,255,255,.12);border-radius:16px;font-size:16px;line-height:1.4;text-align:center}
 .cend{position:absolute;bottom:90px;left:50%;margin-left:-36px;width:72px;height:72px;border-radius:50%;background:#ff3b30;display:flex;align-items:center;justify-content:center;font-size:32px}
 .cend span{display:block;transform:rotate(135deg)}
+.cms{padding:6px 12px 0;font-size:14px;line-height:1.35}
+.cms p{margin-bottom:3px}
+.cin{display:flex;gap:8px;align-items:center;padding:8px 12px 0}
+.cin input{flex:1;min-width:0;border:0;border-bottom:1px solid #dbdbdb;padding:6px 2px;font:inherit;font-size:16px;outline:0;background:none;color:#000}
+.cin button{color:#0095f6;font-weight:600;font-size:14px}
+.msgin{flex:1;min-width:0;border:1px solid #d1d1d6;border-radius:18px;padding:6px 12px;font:inherit;font-size:16px;outline:0;background:#fff;color:#000}
+.sendb{width:30px;height:30px;border-radius:50%;background:#0a84ff;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;flex:none} 
   #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -390,22 +397,35 @@ $("#island").onclick = bloquear;  /* tocar la isla dinámica bloquea el teléfon
 const dbar = (vol,mid) => `<div class="dbar"><button data-back>‹ ${vol}</button><div class="mid">${mid||""}</div><span style="width:60px"></span></div>`;
 
 /* Mensajes */
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const avHtml = (nombre,i,foto) => foto ? `<div class="av avf" style="background-image:url('${encodeURI(foto)}')"></div>` : `<div class="av" style="background:${colores[i%6]}">${nombre[0]}</div>`;
-$("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
-  const ult = [...m.chat].reverse().find(x=>x.t);
-  return `<button class="row" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?ult.t:""}</span></div><small>${m.hora}</small></button>`;
-}).join("");
-$("#msgList").onclick = e=>{
-  const r = e.target.closest("[data-m]"); if(!r) return;
-  const i = +r.dataset.m, m = DATA.mensajes[i];
+function listaMsg(){
+  $("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
+    const ult = [...m.chat].reverse().find(x=>x.t);
+    return `<button class="row" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
+  }).join("");
+}
+let mi = 0;
+function chatMsg(i){
+  const m = DATA.mensajes[i]; mi = i;
   const ultimoYo = m.chat.map(x=>!!x.yo).lastIndexOf(true);
   $("#msgChat").innerHTML = dbar("Mensajes", avHtml(m.nombre,i,m.foto) + m.nombre) +
     `<div class="scroll"><div class="chat">` + m.chat.map((x,k)=>
-      x.dia ? `<div class="day">${x.dia}</div>` : `<div class="b ${x.yo?"me":"you"}">${x.t}</div>` + (k===ultimoYo?`<div class="entreg">Entregado</div>`:"")).join("") +
-    `</div></div><div class="input"><i>+</i><div>iMessage</div></div>`;
+      x.dia ? `<div class="day">${x.dia}</div>` : `<div class="b ${x.yo?"me":"you"}">${esc(x.t)}</div>` + (k===ultimoYo?`<div class="entreg">Entregado</div>`:"")).join("") +
+    `</div></div><div class="input"><i>+</i><input class="msgin" id="msgIn" placeholder="iMessage" maxlength="300"><button class="sendb" id="msgSend">↑</button></div>`;
   $("#msgChat").classList.add("on");
   const s = $("#msgChat .scroll"); s.scrollTop = s.scrollHeight;
-};
+}
+function enviarMsg(){
+  const t = $("#msgIn").value.trim(); if(!t) return;
+  DATA.mensajes[mi].chat.push({yo:true, t});
+  DATA.mensajes[mi].hora = "Ahora";
+  listaMsg(); chatMsg(mi); $("#msgIn").focus();
+}
+$("#msgList").onclick = e=>{ const r = e.target.closest("[data-m]"); if(r) chatMsg(+r.dataset.m); };
+$("#msgChat").addEventListener("click", e=>{ if(e.target.closest("#msgSend")) enviarMsg(); });
+$("#msgChat").addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.id==="msgIn"){ e.preventDefault(); enviarMsg(); } });
+listaMsg();
 
 /* Notas */
 $("#noteList").innerHTML = DATA.notas.map((n,i)=>
@@ -477,15 +497,29 @@ $("#igAvs").setAttribute("style", IG.avatar ? `background-image:url('${IG.avatar
 $("#igStories").innerHTML = [{nombre:"Tu historia",yo:true}, ...IG.historias].map((h,i)=>
   `<div class="st"><div class="ring ${h.yo?"yo":""}"><div class="av" style="${h.yo?igAv(0):"background:"+colores[(i+2)%6]}">${h.yo?IG.nombre[0]:h.nombre[0]}</div></div>${h.nombre}</div>`).join("");
 const likes = IG.publicaciones.map(p=>({n:p.likes,on:false}));
+const coms = IG.publicaciones.map(p=>[...(p.comentarios||[])]);
+const borr = IG.publicaciones.map(()=>"");
 function igPosts(){
   $("#igPosts").innerHTML = IG.publicaciones.map((p,i)=>
     `<div class="post"><div class="ph-h"><div class="av" style="${igAv(0)}">${IG.nombre[0]}</div>${IG.usuario}</div>
      <div class="pimg" style="${igFondo(p.src,i)}"></div>
      <div class="pact"><button data-like="${i}" class="${likes[i].on?"liked":""}">${likes[i].on?"♥":"♡"}</button><span>💬</span><span>✈️</span></div>
-     <div class="ptxt"><b>Les gusta a ${likes[i].n} personas</b><br><b>${IG.usuario}</b> ${p.texto}<small>${p.fecha||""}</small></div></div>`).join("");
+     <div class="ptxt"><b>Les gusta a ${likes[i].n} personas</b><br><b>${IG.usuario}</b> ${p.texto}<small>${p.fecha||""}</small></div>
+     <div class="cms">${coms[i].map(c=>`<p><b>${esc(c.u)}</b> ${esc(c.t)}</p>`).join("")}</div>
+     <div class="cin"><input data-ci="${i}" placeholder="Añade un comentario..." maxlength="200" value="${esc(borr[i]).replace(/"/g,"&quot;")}"><button data-pub="${i}">Publicar</button></div></div>`).join("");
+}
+function publicar(i){
+  const t = borr[i].trim(); if(!t) return;
+  coms[i].push({u:IG.usuario, t}); borr[i] = ""; igPosts();
 }
 igPosts();
-$("#igPosts").onclick = e=>{ const b = e.target.closest("[data-like]"); if(!b) return; const l = likes[b.dataset.like]; l.on = !l.on; l.n += l.on ? 1 : -1; igPosts(); };
+$("#igPosts").onclick = e=>{
+  const b = e.target.closest("[data-like]");
+  if(b){ const l = likes[b.dataset.like]; l.on = !l.on; l.n += l.on ? 1 : -1; igPosts(); return; }
+  const p = e.target.closest("[data-pub]"); if(p) publicar(+p.dataset.pub);
+};
+$("#igPosts").addEventListener("input", e=>{ const c = e.target.closest("[data-ci]"); if(c) borr[c.dataset.ci] = c.value; });
+$("#igPosts").addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.matches("[data-ci]")){ e.preventDefault(); publicar(+e.target.dataset.ci); } });
 $("#igPerfil").innerHTML = `<div class="pfh"><div class="av" style="${igAv(0)}">${IG.nombre[0]}</div><div class="stats"><div><b>${IG.publicaciones.length}</b>publicaciones</div><div><b>${IG.seguidores}</b>seguidores</div><div><b>${IG.seguidos}</b>seguidos</div></div></div>
   <div class="pfn"><b>${IG.nombre}</b>\n${IG.bio}</div><button class="edit">Editar perfil</button>
   <div class="pgrid">${IG.publicaciones.map((p,i)=>`<div style="${igFondo(p.src,i)}"></div>`).join("")}</div>`;
