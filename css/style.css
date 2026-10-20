@@ -679,3 +679,34 @@ button {
   font-weight: 500;
   letter-spacing: 0.5px;
 }
+/* Rejilla de aplicaciones en pantalla principal */
+.armando-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 12px;
+    padding: 20px 16px;
+    margin-top: 10px;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+}
+
+.app-item img {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.app-item span {
+    color: #ffffff;
+    font-size: 11px;
+    margin-top: 5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 400;
+}
