@@ -205,6 +205,14 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .nh small{color:#6e6e73;font-size:13px}
 .nb{font-size:15px;line-height:1.25;margin-top:1px}
 .row.perdida .t b{color:#ff3b30}
+.sfh{padding:4px 20px 6px;font-size:34px;font-weight:700}
+.sfg{padding:14px 20px 6px;font-size:13px;color:#8e8e93;text-transform:uppercase;font-weight:600}
+.sfr{display:flex;gap:12px;align-items:center;padding:11px 20px;border-bottom:.5px solid #e5e5ea}
+.sfr i{width:30px;height:30px;border-radius:50%;background:#e5e5ea;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:15px;flex:none}
+.sfr b{display:block;font-size:16px;font-weight:400;line-height:1.25}
+.sfr span{display:block;font-size:13px;color:#8e8e93;margin-top:1px}
+.sfbar{position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(249,249,249,.94);border-top:.5px solid #d1d1d6;padding:10px 14px 0;z-index:2}
+.sfbar div{background:rgba(118,118,128,.12);border-radius:12px;padding:10px 12px;font-size:16px;color:#8e8e93;text-align:center}
  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -232,7 +240,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
   <section class="app" id="app-fotos" style="background:#fff"><div class="big">Recientes</div><div class="body" style="padding-bottom:90px"><div id="photos"></div></div><div class="tabs"><div class="on">🖼️<br>Biblioteca</div><div>💜<br>Para ti</div><div>📁<br>Álbumes</div></div><div class="detail full" id="photoView"></div></section>
   <section class="app" id="app-calendario" style="background:#fff"><div class="mh"><button id="prevM">‹</button><h2 id="monthName"></h2><button id="nextM">›</button></div><div class="cal" id="cal"></div><div class="body" id="evList" style="background:#f2f2f7;padding-top:4px"></div></section>
   <section class="app" id="app-music"><div style="padding:0 12px"></div><div class="body"><div class="art" id="art">♫</div><div class="np"><h2 id="mTitle"></h2><p id="mArtist"></p></div><div class="prog"><div id="mProg"></div></div><div class="ctl"><button id="mPrev"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.500 12 18 18V6z"/></svg></button><button id="mPlay"></button><button id="mNext"><svg width="38" height="38" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.500-6L6 6z"/></svg></button></div><div class="q" id="mQueue"></div></div></section>
-
+  <section class="app" id="app-safari" style="background:#fff"><div class="sfh">Historial</div><div class="search">🔍 Buscar en el historial</div><div class="body" id="sfList"></div><div class="sfbar"><div>🔍 Buscar o introducir sitio web</div></div></section>
   <section class="app" id="app-insta" style="background:#fff"><div class="igtop" id="igTop"></div><div class="body" style="padding-bottom:100px"><div id="igFeed"><div class="stories" id="igStories"></div><div id="igPosts"></div></div><div id="igPerfil" style="display:none"></div></div><div class="igtabs"><button data-igtab="feed" class="on">🏠</button><button>🔍</button><button>➕</button><button>🎬</button><button data-igtab="perfil"><div class="avs" id="igAvs"></div></button></div></section>
 
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
@@ -269,7 +277,21 @@ const DATA = {
       { src: "img/cena.JPG", texto: "Celebrando la vida, y a ti. Feliz aniversario, amor ❤️", likes: 97, fecha: "hace 3 años" }
     ]
   },
-
+  busquedas: [
+    { grupo: "Hoy", items: [
+      { t: "cuánto tarda en despertar alguien en coma", d: "google.com" },
+      { t: "qué sentir cuando tu esposo no despierta", d: "google.com" },
+      { t: "cómo hacer un chongo de ballet para niña", d: "youtube.com" }
+    ]},
+    { grupo: "Ayer", items: [
+      { t: "los pacientes en coma pueden escuchar lo que les dicen", d: "google.com" },
+      { t: "cómo explicarle a una niña que su papá está en el hospital", d: "google.com" },
+      { t: "señales de que un paciente en coma está mejorando", d: "google.com" }
+    ]},
+    { grupo: "29 de septiembre", items: [
+      { t: "urgencias hospital general cómo llegar", d: "maps.google.com" }
+    ]}
+  ],
       llamadas: {
     buzon: "Hola, soy Brian. Ahora no puedo contestar, deja tu mensaje y te llamo en cuanto pueda.",
     recientes: [
@@ -398,7 +420,7 @@ const ICONOS = {
   safari:'<div class="ic ic-safari"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25" fill="#2f9bff"/><circle cx="28" cy="28" r="25" fill="none" stroke="#d1d1d6" stroke-width="2"/><path fill="#ff3b30" d="M40 16L31 31l-6-6z"/><path fill="#fff" d="M16 40l9-15 6 6z"/></svg></div>'
 };
 const NOMBRES = {llamadas:"Teléfono",mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram",camara:"Cámara",reloj:"Reloj",mapas:"Mapas",clima:"Clima",salud:"Salud",ajustes:"Ajustes",correo:"Correo",appstore:"App Store",safari:"Safari"};
-const REAL = ["llamadas","mensajes","notas","fotos","calendario","music","insta"];
+const REAL = ["llamadas","mensajes","notas","fotos","calendario","music","insta","safari"];
 const BADGE = {llamadas:"4", mensajes:"3", insta:"8"};
 const btn = id => `<button class="app-i" ${REAL.includes(id)?`data-app="${id}"`:""}>${ICONOS[id]}${BADGE[id]?`<i class="bd">${BADGE[id]}</i>`:""}<span>${NOMBRES[id]}</span></button>`;
 $("#grid").innerHTML = ["calendario","fotos","camara","reloj","mapas","clima","notas","insta","salud","correo","appstore","ajustes"].map(btn).join("");
@@ -650,6 +672,12 @@ $("#msgList").addEventListener("click", e=>{
   const r = e.target.closest("[data-m]");
   if(r){ DATA.mensajes[+r.dataset.m].nuevo = false; setTimeout(listaMsg, 500); }
 });
+ /* Safari */
+$("#sfList").innerHTML = DATA.busquedas.map(function(g){
+  return '<div class="sfg">' + g.grupo + '</div>' + g.items.map(function(x){
+    return '<div class="sfr"><i>🔍</i><div><b>' + esc(x.t) + '</b><span>' + x.d + '</span></div></div>';
+  }).join("");
+}).join("");
 </script>
 </body>
 </html>
