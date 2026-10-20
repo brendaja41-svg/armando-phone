@@ -194,6 +194,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 #pgdots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4)}
 #pgdots i.on{background:#fff}
 @media(max-height:760px){#pill,#pgdots{display:none}}
+ .row.nuevo::after{content:"";position:absolute;left:3px;top:50%;margin-top:-5px;width:10px;height:10px;border-radius:50%;background:#0a84ff}
   #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -271,6 +272,26 @@ const DATA = {
     ]
   },
     mensajes: [
+          { nombre: "Mamá", hora: "Ahora", nuevo: true, chat: [
+      { dia: "Martes 29 sep 23:40" },
+      { yo: false, t: "Hijo, acabo de ver tu mensaje. Ya voy para el hospital, no te muevas de ahí." },
+      { yo: true,  t: "Mamá, no sé qué hacer. Brian no despierta." },
+      { yo: false, t: "Aquí estoy, mi vida. Respira. Ya casi llego." },
+      { dia: "Jueves 1 oct 08:30" },
+      { yo: false, t: "¿Dormiste algo anoche?" },
+      { yo: true,  t: "Un poco, en la silla del cuarto." },
+      { yo: false, t: "Te dejé comida en la mochila de Melody. Por favor come algo." },
+      { dia: "Sábado 10 oct 19:05" },
+      { yo: false, t: "Melody se quedó dormida abrazando su peluche. Yo la arropé, tú quédate tranquilo con Brian." },
+      { yo: true,  t: "Gracias, mamá." },
+      { dia: "Domingo 18 oct 22:30" },
+      { yo: false, t: "No me contestas y me preocupo. Sé que estás cansado, pero tienes que cuidarte tú también." },
+      { yo: false, t: "Melody te necesita entero. Y Brian va a necesitar que estés fuerte cuando despierte." },
+      { yo: true,  t: "Estoy bien, mamá. Solo cansado." },
+      { yo: false, t: "Te quiero mucho, hijo." },
+      { dia: "Hoy 21:52" },
+      { yo: false, t: "¿Ya comiste algo?" }
+    ]},
         { nombre: "Mi amor ❤️", hora: "Ayer", foto: "img/solo bri.JPG", chat: [
       { dia: "Martes 29 sep 18:05" },
       { yo: false, t: "Ya salí del trabajo, ¿necesitas algo del súper?" },
@@ -431,7 +452,7 @@ const avHtml = (nombre,i,foto) => foto ? `<div class="av avf" style="background-
 function listaMsg(){
   $("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
     const ult = [...m.chat].reverse().find(x=>x.t);
-    return `<button class="row" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
+    return <button class="row ${m.nuevo?"nuevo":""}" data-m="${i}">${avHtml(m.nombre,i,m.foto)}<div class="t"><b>${m.nombre}</b><span>${ult?esc(ult.t):""}</span></div><small>${m.hora}</small></button>`;
   }).join("");
 }
 let mi = 0;
