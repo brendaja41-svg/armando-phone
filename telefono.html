@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iPhone de Armando</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#111;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;min-height:100dvh;color:#1c1c1e}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+#phone{position:relative;width:390px;height:844px;max-height:100dvh;border-radius:48px;overflow:hidden;box-shadow:0 0 0 10px #2a2a2a,0 24px 60px rgba(0,0,0,.7);background:linear-gradient(160deg,#3a3f5c,#1b1d2e 55%,#4a3550)}
+@media(max-width:430px){body{background:#000}#phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+#status{position:absolute;top:0;left:0;right:0;height:44px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 28px 6px;font-size:15px;font-weight:600;color:#fff;z-index:30;pointer-events:none}
+#status.dark{color:#000}
+#home{position:absolute;inset:0;padding:70px 20px 0;color:#fff}
+#bigclock{text-align:center;margin-top:14px}
+#bigclock b{display:block;font-size:68px;font-weight:300;letter-spacing:-1px}
+#bigclock span{font-size:16px;opacity:.85;text-transform:capitalize}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 8px;margin-top:44px}
+.icon{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.icon i{width:62px;height:62px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:30px;font-style:normal;box-shadow:0 3px 10px rgba(0,0,0,.35);transition:transform .12s}
+.icon:active i{transform:scale(.9)}
+.app{position:absolute;inset:0;background:#f2f2f7;display:flex;flex-direction:column;transform:translateY(100%) scale(.96);opacity:0;pointer-events:none;transition:transform .28s ease,opacity .2s;z-index:10;padding-top:44px}
+.app.on{transform:none;opacity:1;pointer-events:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:6px 14px 8px;min-height:46px}
+.bar h1{font-size:19px;font-weight:700;position:absolute;left:0;right:0;text-align:center;pointer-events:none}
+.bar button{color:#0a84ff;font-size:17px;position:relative;z-index:1;padding:6px}
+.body{flex:1;overflow-y:auto;padding-bottom:40px;position:relative}
+.detail{position:absolute;inset:0;background:#f2f2f7;overflow-y:auto;transform:translateX(100%);transition:transform .25s ease;padding-bottom:40px}
+.detail.on{transform:none}
+#bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#fff;z-index:40;cursor:pointer;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.row{display:flex;gap:12px;align-items:center;padding:12px 16px;background:#fff;border-bottom:1px solid #e5e5ea;cursor:pointer;width:100%;text-align:left}
+.av{width:44px;height:44px;border-radius:50%;background:#aeaeb2;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;flex:none}
+.row .t{flex:1;min-width:0}.row .t b{display:block;font-size:16px}.row .t span{display:block;font-size:14px;color:#8e8e93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small{color:#8e8e93;font-size:13px}
+.chat{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.b{max-width:75%;padding:8px 13px;border-radius:19px;font-size:16px;line-height:1.3}
+.b.me{align-self:flex-end;background:#0a84ff;color:#fff}.b.you{align-self:flex-start;background:#e5e5ea}
+.day{text-align:center;font-size:12px;color:#8e8e93;margin:10px 0 2px}
+.note{padding:20px;font-size:17px;line-height:1.5;white-space:pre-wrap;background:#fffbe6;min-height:100%}
+.note h2{font-size:24px;margin-bottom:12px}
+#photos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#fff}
+.ph{aspect-ratio:1;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:6px;font-size:11px;color:#fff;text-align:left}
+.full{background:#000;display:flex;flex-direction:column;justify-content:center}
+.full .ph{aspect-ratio:auto;height:60%}
+.full p{color:#fff;padding:16px;font-size:16px}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 10px}
+.mh h2{font-size:22px;text-transform:capitalize}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:0 10px;background:#fff;padding-bottom:10px}
+.cal div{padding:8px 0;font-size:16px;position:relative;cursor:pointer}
+.cal .wd{font-size:12px;color:#8e8e93;cursor:default}
+.cal .today span{background:#ff3b30;color:#fff;border-radius:50%;display:inline-block;width:30px;height:30px;line-height:30px}
+.cal .sel span{background:#1c1c1e;color:#fff;border-radius:50%;display:inline-block;width:30px;height:30px;line-height:30px}
+.cal .has::after{content:"";position:absolute;bottom:0;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#8e8e93}
+.ev{background:#fff;margin:8px 14px;padding:12px 14px;border-radius:12px;border-left:4px solid #ff9500}
+.ev b{display:block}.ev span{font-size:13px;color:#8e8e93}
+.empty{color:#8e8e93;text-align:center;padding:24px;font-size:15px}
+#music{background:linear-gradient(#5b4b8a,#1c1c1e);color:#fff}
+#music .bar button{color:#fff}
+.art{width:240px;height:240px;border-radius:18px;margin:10px auto 22px;background:linear-gradient(135deg,#ff6b9d,#6a5acd);box-shadow:0 14px 34px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:84px}
+.np{text-align:center}.np h2{font-size:22px}.np p{opacity:.7;margin-top:2px}
+.prog{height:5px;background:rgba(255,255,255,.25);border-radius:3px;margin:22px 30px 6px;overflow:hidden}
+.prog div{height:100%;width:0;background:#fff}
+.ctl{display:flex;justify-content:center;align-items:center;gap:34px;font-size:34px;margin:14px 0 18px}
+.ctl .play{font-size:50px}
+.q{background:rgba(255,255,255,.08);margin:0 16px;border-radius:14px;overflow:hidden}
+.q button{display:block;width:100%;text-align:left;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.q button.cur{color:#ff9fc4}
+.q small{opacity:.6}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="status"><span id="hora">09:41</span><span>5G 🔋</span></div>
+
+  <div id="home">
+    <div id="bigclock"><b id="hora2">09:41</b><span id="fecha"></span></div>
+    <div id="grid"></div>
+  </div>
+
+  <section class="app" id="app-mensajes"><div class="bar"><button data-back>‹ Atrás</button><h1>Mensajes</h1><span></span></div><div class="body" id="msgList"></div><div class="detail" id="msgChat"></div></section>
+  <section class="app" id="app-notas"><div class="bar"><button data-back>‹ Atrás</button><h1>Notas</h1><span></span></div><div class="body" id="noteList"></div><div class="detail" id="noteView"></div></section>
+  <section class="app" id="app-fotos"><div class="bar"><button data-back>‹ Atrás</button><h1>Fotos</h1><span></span></div><div class="body"><div id="photos"></div></div><div class="detail full" id="photoView"></div></section>
+  <section class="app" id="app-calendario"><div class="bar"><button data-back>‹ Atrás</button><h1>Calendario</h1><span></span></div><div class="body"><div class="mh"><button id="prevM">‹</button><h2 id="monthName"></h2><button id="nextM">›</button></div><div class="cal" id="cal"></div><div id="evList" style="padding-top:8px"></div></div></section>
+  <section class="app" id="music"><div class="bar"><button data-back>‹ Atrás</button><h1>Música</h1><span></span></div><div class="body"><div class="art">🎵</div><div class="np"><h2 id="mTitle"></h2><p id="mArtist"></p></div><div class="prog"><div id="mProg"></div></div><div class="ctl"><button id="mPrev">⏮</button><button id="mPlay" class="play">▶️</button><button id="mNext">⏭</button></div><div class="q" id="mQueue"></div></div></section>
+
+  <div id="bar-home" title="Inicio"></div>
+</div>
+
+<script>
+/* ============================================================
+   AQUÍ EDITAS EL CONTENIDO. Todo lo que está entre comillas "..."
+   es texto que puedes cambiar. Es contenido de ejemplo.
+   ============================================================ */
+const DATA = {
+  mensajes: [
+    { nombre: "Contacto 1", hora: "09:12", chat: [
+      { dia: "Lunes" },
+      { yo: false, t: "Aquí va un mensaje de Contacto 1." },
+      { yo: true,  t: "Aquí va la respuesta de Armando." }
+    ]},
+    { nombre: "Contacto 2", hora: "Ayer", chat: [
+      { dia: "Ayer" },
+      { yo: false, t: "Otro mensaje de ejemplo." },
+      { yo: true,  t: "Y otra respuesta de ejemplo." }
+    ]}
+  ],
+  notas: [
+    { titulo: "Nota 1", texto: "Escribe aquí el texto de la primera nota de Armando." },
+    { titulo: "Nota 2", texto: "Escribe aquí el texto de la segunda nota.\nPuedes usar varias líneas." }
+  ],
+  /* Para usar una foto tuya: sube la imagen a la carpeta img del repositorio
+     y escribe su nombre en "src", por ejemplo: src: "img/foto1.jpg"
+     Si dejas "src" vacío se muestra un cuadro de color. */
+  fotos: [
+    { src: "", pie: "Foto 1" }, { src: "", pie: "Foto 2" }, { src: "", pie: "Foto 3" },
+    { src: "", pie: "Foto 4" }, { src: "", pie: "Foto 5" }, { src: "", pie: "Foto 6" }
+  ],
+  /* Fecha en formato AAAA-MM-DD */
+  eventos: [
+    { fecha: "2026-10-25", titulo: "Evento de ejemplo 1", hora: "10:00" },
+    { fecha: "2026-10-30", titulo: "Evento de ejemplo 2", hora: "18:30" }
+  ],
+  musica: [
+    { titulo: "Canción 1", artista: "Artista 1" },
+    { titulo: "Canción 2", artista: "Artista 2" },
+    { titulo: "Canción 3", artista: "Artista 3" }
+  ]
+};
+/* ============================================================ */
+
+const $ = s => document.querySelector(s);
+const colores = ["#ff6b6b","#feca57","#48dbfb","#1dd1a1","#a29bfe","#fd79a8"];
+
+/* Hora y fecha reales */
+function reloj(){
+  const d = new Date();
+  const h = d.toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit",hour12:false});
+  $("#hora").textContent = h; $("#hora2").textContent = h;
+  $("#fecha").textContent = d.toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"});
+}
+reloj(); setInterval(reloj,15000);
+
+/* Pantalla de inicio */
+const APPS = [
+  {id:"mensajes",n:"Mensajes",e:"💬",c:"#34c759"},
+  {id:"notas",n:"Notas",e:"📝",c:"#ffd60a"},
+  {id:"fotos",n:"Fotos",e:"🖼️",c:"#fff"},
+  {id:"calendario",n:"Calendario",e:"📅",c:"#fff"},
+  {id:"music",n:"Música",e:"🎵",c:"#ff375f"}
+];
+$("#grid").innerHTML = APPS.map(a =>
+  `<button class="icon" data-app="${a.id}"><i style="background:${a.c}">${a.e}</i>${a.n}</button>`).join("");
+
+let actual = null;
+function abrir(id){
+  const el = id==="music" ? $("#music") : $("#app-"+id);
+  el.classList.add("on"); actual = el;
+  $("#status").classList.toggle("dark", id!=="music");
+}
+function inicio(){
+  document.querySelectorAll(".app.on").forEach(a=>{a.classList.remove("on");a.querySelectorAll(".detail.on").forEach(d=>d.classList.remove("on"));});
+  actual = null; $("#status").classList.remove("dark");
+}
+function atras(){
+  if(!actual) return;
+  const d = actual.querySelector(".detail.on");
+  if(d) d.classList.remove("on"); else inicio();
+}
+document.addEventListener("click", e=>{
+  const a = e.target.closest("[data-app]"); if(a) abrir(a.dataset.app);
+  if(e.target.closest("[data-back]")) atras();
+});
+$("#bar-home").onclick = inicio;
+
+/* Mensajes */
+$("#msgList").innerHTML = DATA.mensajes.map((m,i)=>{
+  const ult = [...m.chat].reverse().find(x=>x.t);
+  return `<button class="row" data-m="${i}"><div class="av" style="background:${colores[i%6]}">${m.nombre[0]}</div><div class="t"><b>${m.nombre}</b><span>${ult?ult.t:""}</span></div><small>${m.hora}</small></button>`;
+}).join("");
+$("#msgList").onclick = e=>{
+  const r = e.target.closest("[data-m]"); if(!r) return;
+  const m = DATA.mensajes[r.dataset.m];
+  $("#msgChat").innerHTML = `<div class="chat">` + m.chat.map(x =>
+    x.dia ? `<div class="day">${x.dia}</div>` : `<div class="b ${x.yo?"me":"you"}">${x.t}</div>`).join("") + `</div>`;
+  $("#msgChat").classList.add("on");
+};
+
+/* Notas */
+$("#noteList").innerHTML = DATA.notas.map((n,i)=>
+  `<button class="row" data-n="${i}"><div class="t"><b>${n.titulo}</b><span>${n.texto.split("\n")[0]}</span></div></button>`).join("");
+$("#noteList").onclick = e=>{
+  const r = e.target.closest("[data-n]"); if(!r) return;
+  const n = DATA.notas[r.dataset.n];
+  $("#noteView").innerHTML = `<div class="note"><h2>${n.titulo}</h2>${n.texto}</div>`;
+  $("#noteView").classList.add("on");
+};
+
+/* Fotos */
+function fondo(f,i){ return f.src ? `background-image:url('${f.src}')` : `background:${colores[i%6]}`; }
+$("#photos").innerHTML = DATA.fotos.map((f,i)=>`<button class="ph" data-f="${i}" style="${fondo(f,i)}"></button>`).join("");
+$("#photos").onclick = e=>{
+  const r = e.target.closest("[data-f]"); if(!r) return;
+  const i = r.dataset.f, f = DATA.fotos[i];
+  $("#photoView").innerHTML = `<div class="ph" style="${fondo(f,i)};background-size:contain;background-repeat:no-repeat"></div><p>${f.pie||""}</p>`;
+  $("#photoView").classList.add("on");
+};
+
+/* Calendario */
+let mes = new Date(); mes.setDate(1);
+let diaSel = null;
+const pad = n => String(n).padStart(2,"0");
+function calendario(){
+  const y = mes.getFullYear(), m = mes.getMonth();
+  $("#monthName").textContent = mes.toLocaleDateString("es",{month:"long",year:"numeric"});
+  const primero = (new Date(y,m,1).getDay()+6)%7, dias = new Date(y,m+1,0).getDate();
+  const hoy = new Date(); let h = ["L","M","X","J","V","S","D"].map(x=>`<div class="wd">${x}</div>`).join("");
+  for(let i=0;i<primero;i++) h += "<div></div>";
+  for(let d=1; d<=dias; d++){
+    const k = `${y}-${pad(m+1)}-${pad(d)}`;
+    const cls = [(d===hoy.getDate()&&m===hoy.getMonth()&&y===hoy.getFullYear())?"today":"", k===diaSel?"sel":"", DATA.eventos.some(e=>e.fecha===k)?"has":""].join(" ");
+    h += `<div class="${cls}" data-d="${k}"><span>${d}</span></div>`;
+  }
+  $("#cal").innerHTML = h;
+  const lista = DATA.eventos.filter(e => diaSel ? e.fecha===diaSel : e.fecha.startsWith(`${y}-${pad(m+1)}`));
+  $("#evList").innerHTML = lista.length
+    ? lista.sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(e=>`<div class="ev"><b>${e.titulo}</b><span>${e.fecha.split("-").reverse().join("/")} · ${e.hora||""}</span></div>`).join("")
+    : `<div class="empty">No hay eventos.</div>`;
+}
+$("#prevM").onclick = ()=>{mes.setMonth(mes.getMonth()-1);diaSel=null;calendario();};
+$("#nextM").onclick = ()=>{mes.setMonth(mes.getMonth()+1);diaSel=null;calendario();};
+$("#cal").onclick = e=>{const d=e.target.closest("[data-d]"); if(!d) return; diaSel = diaSel===d.dataset.d?null:d.dataset.d; calendario();};
+calendario();
+
+/* Música (controles visuales, sin sonido) */
+let ci = 0, sonando = false, prog = 0;
+function musica(){
+  const c = DATA.musica[ci];
+  $("#mTitle").textContent = c.titulo; $("#mArtist").textContent = c.artista;
+  $("#mPlay").textContent = sonando ? "⏸️" : "▶️";
+  $("#mProg").style.width = prog + "%";
+  $("#mQueue").innerHTML = DATA.musica.map((s,i)=>`<button data-s="${i}" class="${i===ci?"cur":""}">${s.titulo}<br><small>${s.artista}</small></button>`).join("");
+}
+$("#mPlay").onclick = ()=>{sonando=!sonando;musica();};
+$("#mNext").onclick = ()=>{ci=(ci+1)%DATA.musica.length;prog=0;musica();};
+$("#mPrev").onclick = ()=>{ci=(ci-1+DATA.musica.length)%DATA.musica.length;prog=0;musica();};
+$("#mQueue").onclick = e=>{const s=e.target.closest("[data-s]"); if(!s) return; ci=+s.dataset.s;prog=0;sonando=true;musica();};
+setInterval(()=>{ if(sonando){ prog+=1.2; if(prog>=100){prog=0;ci=(ci+1)%DATA.musica.length;} musica(); } },1000);
+musica();
+</script>
+</body>
+</html>
