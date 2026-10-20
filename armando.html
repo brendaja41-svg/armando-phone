@@ -204,6 +204,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .nh{display:flex;justify-content:space-between;font-size:15px}
 .nh small{color:#6e6e73;font-size:13px}
 .nb{font-size:15px;line-height:1.25;margin-top:1px}
+.row.perdida .t b{color:#ff3b30}
  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -269,15 +270,15 @@ const DATA = {
     ]
   },
 
-    llamadas: {
-    contacto: "Mi amor ❤️",
-    foto: "img/solo bri.JPG",
-       buzon: "Hola, soy Brian. Ahora no puedo contestar, deja tu mensaje y te llamo en cuanto pueda.",
+      llamadas: {
+    buzon: "Hola, soy Brian. Ahora no puedo contestar, deja tu mensaje y te llamo en cuanto pueda.",
     recientes: [
-      { tipo: "saliente", hora: "Hoy" },
-      { tipo: "saliente", hora: "Ayer" },
-      { tipo: "saliente", hora: "Lunes" },
-      { tipo: "entrante", hora: "29 sep" }
+      { nombre: "Mamá", tipo: "perdida", hora: "21:45", n: 3 },
+      { nombre: "Mamá", tipo: "perdida", hora: "20:40" },
+      { nombre: "Mateo", tipo: "perdida", hora: "19:20" },
+      { nombre: "Mi amor ❤️", foto: "img/solo bri.JPG", tipo: "saliente", hora: "Ayer", buzon: true },
+      { nombre: "Mi amor ❤️", foto: "img/solo bri.JPG", tipo: "saliente", hora: "Lunes", buzon: true },
+      { nombre: "Mi amor ❤️", foto: "img/solo bri.JPG", tipo: "entrante", hora: "29 sep", buzon: true }
     ]
   },
     mensajes: [
@@ -398,7 +399,7 @@ const ICONOS = {
 };
 const NOMBRES = {llamadas:"Teléfono",mensajes:"Mensajes",notas:"Notas",fotos:"Fotos",calendario:"Calendario",music:"Música",insta:"Instagram",camara:"Cámara",reloj:"Reloj",mapas:"Mapas",clima:"Clima",salud:"Salud",ajustes:"Ajustes",correo:"Correo",appstore:"App Store",safari:"Safari"};
 const REAL = ["llamadas","mensajes","notas","fotos","calendario","music","insta"];
-const BADGE = {mensajes:"3", insta:"8"};
+const BADGE = {llamadas:"4", mensajes:"3", insta:"8"};
 const btn = id => `<button class="app-i" ${REAL.includes(id)?`data-app="${id}"`:""}>${ICONOS[id]}${BADGE[id]?`<i class="bd">${BADGE[id]}</i>`:""}<span>${NOMBRES[id]}</span></button>`;
 $("#grid").innerHTML = ["calendario","fotos","camara","reloj","mapas","clima","notas","insta","salud","correo","appstore","ajustes"].map(btn).join("");
 $("#dock").innerHTML = ["llamadas","safari","mensajes","music"].map(btn).join("");
@@ -591,27 +592,36 @@ igTab("feed");
 document.querySelectorAll("[data-igtab]").forEach(b=>b.onclick = ()=>igTab(b.dataset.igtab));
 /* Llamadas */
 const LL = DATA.llamadas;
-const llFoto = LL.foto ? `background-image:url('${encodeURI(LL.foto)}')` : `background:${colores[0]}`;
-$("#callList").innerHTML = LL.recientes.map(r=>
-  `<button class="row" data-call><div class="av ${LL.foto?"avf":""}" style="${llFoto}">${LL.foto?"":LL.contacto[0]}</div><div class="t"><b>${LL.contacto}</b><span>${r.tipo}</span></div><small>${r.hora}</small></button>`).join("");
+const TXT = {perdida:"Llamada perdida", saliente:"Saliente", entrante:"Entrante"};
+function fotoStyle(r,i){ return r.foto ? "background-image:url('" + encodeURI(r.foto) + "')" : "background:" + colores[(i+1)%6]; }
+function avLlamada(r,i,cls){ return '<div class="' + cls + '" style="' + fotoStyle(r,i) + '">' + (r.foto ? "" : r.nombre[0]) + '</div>'; }
+function listaLlamadas(){
+  $("#callList").innerHTML = LL.recientes.map(function(r,i){
+    return '<button class="row' + (r.tipo==="perdida" ? " perdida" : "") + '" data-call="' + i + '">' + avLlamada(r,i,"av avf") + '<div class="t"><b>' + r.nombre + (r.n ? " (" + r.n + ")" : "") + '</b><span>' + TXT[r.tipo] + '</span></div><small>' + r.hora + '</small></button>';
+  }).join("");
+}
 let callTok = 0;
-function llamar(){
-  const tok = ++callTok, v = $("#callView");
-  const pantalla = (estado, msg) => { if(tok!==callTok) return;
-    v.innerHTML = `<div class="cav" style="${llFoto}">${LL.foto?"":LL.contacto[0]}</div><div class="cname">${LL.contacto}</div><div class="cst" id="cSt">${estado}</div>${msg?`<div class="cmsg">${msg}</div>`:""}<button class="cend" data-end><span>📞</span></button>`; };
+function llamar(i){
+  const r = LL.recientes[i], tok = ++callTok, v = $("#callView");
+  function pantalla(estado, msg){
+    if(tok!==callTok) return;
+    v.innerHTML = avLlamada(r,i,"cav") + '<div class="cname">' + r.nombre + '</div><div class="cst" id="cSt">' + estado + '</div>' + (msg ? '<div class="cmsg">' + msg + '</div>' : "") + '<button class="cend" data-end><span>📞</span></button>';
+  }
   pantalla("llamando…");
   v.classList.add("on"); $("#status").classList.remove("dark");
-  setTimeout(()=>{
+  if(!r.buzon) return;
+  setTimeout(function(){
     pantalla("Buzón de voz", LL.buzon);
     let s = 0;
-    const iv = setInterval(()=>{
+    const iv = setInterval(function(){
       if(tok!==callTok || !v.classList.contains("on")){ clearInterval(iv); return; }
       s++; const el = $("#cSt"); if(el) el.textContent = "Buzón de voz · " + Math.floor(s/60) + ":" + pad(s%60);
     },1000);
   },4000);
 }
-$("#callList").onclick = e=>{ if(e.target.closest("[data-call]")) llamar(); };
-$("#callView").onclick = e=>{ if(e.target.closest("[data-end]")){ callTok++; $("#callView").classList.remove("on"); $("#status").classList.add("dark"); } };
+$("#callList").onclick = function(e){ const c = e.target.closest("[data-call]"); if(c) llamar(+c.dataset.call); };
+$("#callView").onclick = function(e){ if(e.target.closest("[data-end]")){ callTok++; $("#callView").classList.remove("on"); $("#status").classList.add("dark"); } };
+listaLlamadas();
 /* Notificación de Mamá */
 let notifTimer, notifVista = false, pendiente = false;
 function ocultarNotif(){ clearTimeout(notifTimer); $("#notif").classList.remove("on"); }
