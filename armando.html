@@ -241,8 +241,19 @@ const DATA = {
      y escribe su nombre en "src", por ejemplo: src: "img/foto1.jpg"
      Si dejas "src" vacío se muestra un cuadro de color. */
   fotos: [
-    { src: "", pie: "Foto 1" }, { src: "", pie: "Foto 2" }, { src: "", pie: "Foto 3" },
-    { src: "", pie: "Foto 4" }, { src: "", pie: "Foto 5" }, { src: "", pie: "Foto 6" }
+    { src: "img/selfie.JPG", pie: "Nosotros", sub: "Días tranquilos" },
+    { src: "img/solo bri.JPG", pie: "Brian ❤️", sub: "Mi foto favorita de ti" },
+    { src: "img/ellos y mel.JPG", pie: "Familia completa", sub: "Con nuestra pequeña" },
+    { src: "img/bri y mel.JPG", pie: "Papá e hija", sub: "Sus cómplices de siempre" },
+    { src: "img/ballet.JPG", pie: "Clase de ballet", sub: "Melody en el escenario" },
+    { src: "img/abrazo.JPG", pie: "Tu abrazo", sub: "Donde siempre estuve a salvo" },
+    { src: "img/cena.JPG", pie: "Cena de aniversario", sub: "Celebrando la vida" },
+    { src: "img/broma.JPG", pie: "Tus bromas", sub: "Extraño tanto tu risa" },
+    { src: "img/manejando.JPG", pie: "En el camino", sub: "Viaje de fin de semana" },
+    { src: "img/jugando.JPG", pie: "Tarde de juegos", sub: "Melody y sus risas" },
+    { src: "img/educacion.JPG", pie: "Días de universidad", sub: "Cuando todo comenzaba" },
+    { src: "img/manos y mel.JPG", pie: "Manos juntas", sub: "Promesa de no soltarte" },
+    { src: "img/hospi.JPG", pie: "Habitación 304", sub: "Aquí sigo contigo, Brian" }
   ],
   /* Fecha en formato AAAA-MM-DD */
   eventos: [
@@ -372,12 +383,12 @@ $("#noteList").onclick = e=>{
 };
 
 /* Fotos */
-const fondo = (f,i) => f.src ? `background-image:url('${f.src}')` : `background:${colores[i%6]}`;
+const fondo = (f,i) => f.src ? `background-image:url('${encodeURI(f.src)}')` : `background:${colores[i%6]}`;
 $("#photos").innerHTML = DATA.fotos.map((f,i)=>`<button class="ph" data-f="${i}" style="${fondo(f,i)}"></button>`).join("");
 $("#photos").onclick = e=>{
   const r = e.target.closest("[data-f]"); if(!r) return;
   const i = +r.dataset.f, f = DATA.fotos[i];
-  $("#photoView").innerHTML = dbar("Fotos") + `<div class="scroll"><div class="im" style="${fondo(f,i)}"></div><p>${f.pie||""}</p></div>`;
+  $("#photoView").innerHTML = dbar("Fotos") + `<div class="scroll"><div class="im" style="${fondo(f,i)}"></div><p><b>${f.pie||""}</b><br>${f.sub||""}</p></div>`;
   $("#photoView").classList.add("on"); $("#status").classList.remove("dark");
 };
 
