@@ -630,3 +630,29 @@ button {
 * {
   box-sizing: border-box;
 }
+/* ARMANDO PHONE — Estilos personalizados */
+.armando-time {
+  color: var(--armando-text);
+  font-weight: 600;
+}
+
+.armando-battery {
+  filter: brightness(0.9);
+}
+
+.armando-power-btn {
+  background-color: var(--armando-accent);
+}
+
+.armando-dock {
+  background: var(--armando-card);
+  backdrop-filter: blur(20px);
+}
+
+.armando-app-icon {
+  transition: transform 0.2s ease;
+}
+
+.armando-app-icon:active {
+  transform: scale(0.92);
+}
