@@ -326,3 +326,50 @@ izadjiLinija.addEventListener('click', (event) => {
         window.location.href = '../index.html';
     }, 400);
 })
+
+// --- Conversación de Armando y Brian ---
+const conversacionInicial = [
+  // --- ANTES DEL ACCIDENTE ---
+  { texto: "Miii amor, ya voy saliendo del trabajo. ¿Pasas tú por Melody a la escuela?", tipo: "recibido" },
+  { texto: "Sí, ya voy en camino. Me tocó dar la última clase del día pero salí a tiempo.", tipo: "enviado" },
+  { texto: "Perfecto. Me juró que si le compraba pizza hoy no te decía nada de las galletas de la tarde 🤫", tipo: "recibido" },
+  { texto: "¡Brian! Quedamos en que comería bien hoy... la tienes consentidísima 🤦‍♂️", tipo: "enviado" },
+  { texto: "Es la niña de mis ojos, no me puedo negar 🥺❤️ Además te llevamos tu café favorito. Te amamos, apúrate.", tipo: "recibido" },
+  { texto: "También los amo a los dos. Los veo en un rato ❤️", tipo: "enviado" },
+
+  // --- SEPARADOR DE FECHA / ACCIDENTE ---
+  { texto: "─── 12 de Octubre ───", tipo: "fecha" },
+
+  // --- DESPUÉS DEL ACCIDENTE (Mensajes sin responder de Armando) ---
+  { texto: "Hola, mi amor... Hoy Melody me preguntó cuándo vamos a comer pizza los tres de nuevo.", tipo: "enviado" },
+  { texto: "Le conté otra vez la historia de cuando te equivocaste de salón en la maestría. Se rió mucho.", tipo: "enviado" },
+  { texto: "Por favor, despierta pronto. Te extrañamos demasiado aquí.", tipo: "enviado" }
+];
+
+function cargarMensajesIniciales() {
+  if (!porukeDiv) return;
+  porukeDiv.innerHTML = '';
+  
+  conversacionInicial.forEach(msg => {
+    const div = document.createElement('div');
+    
+    if (msg.tipo === 'fecha') {
+      div.classList.add('fecha-separador');
+      div.textContent = msg.texto;
+    } else {
+      div.classList.add('porukajs');
+      if (msg.tipo === 'recibido') {
+        div.classList.add('recibida');
+      }
+      div.textContent = msg.texto;
+    }
+    
+    porukeDiv.appendChild(div);
+  });
+  if (typeof skrolujDoDole === 'function') {
+    skrolujDoDole();
+  }
+}
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', cargarMensajesIniciales);
