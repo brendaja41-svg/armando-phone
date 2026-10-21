@@ -418,8 +418,8 @@ if(DATA.fondo) $("#wallimg").style.backgroundImage = `url("${encodeURI(DATA.fond
 
 /* Hora y fecha reales */
 function reloj(){
-  const d = new Date();
-  const hh = d.toLocaleTimeString("es",{hour:"numeric",minute:"2-digit",hour12:false});
+const d = new Date(); d.setFullYear(2036);
+ const hh = d.toLocaleTimeString("es",{hour:"numeric",minute:"2-digit",hour12:false});
   $("#hora").textContent = hh; $("#lTime").textContent = hh;
   $("#lDate").textContent = d.toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"});
   $("#wDia").textContent = d.toLocaleDateString("es",{weekday:"long"});
