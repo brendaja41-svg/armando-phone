@@ -563,8 +563,7 @@ $("#photos").onclick = e=>{
 };
 
 /* Calendario */
-let mes = new Date(); mes.setDate(1); let diaSel = null;
-function calendario(){
+let mes = new Date(2036, 9, 1); let diaSel = null;function calendario(){
   const y = mes.getFullYear(), m = mes.getMonth();
   $("#monthName").textContent = mes.toLocaleDateString("es",{month:"long",year:"numeric"});
   const primero = (new Date(y,m,1).getDay()+6)%7, dias = new Date(y,m+1,0).getDate(), hoy = new Date();
