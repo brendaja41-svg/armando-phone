@@ -356,6 +356,32 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
     inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
+/* Ajustes de las notas */
+.note {
+  padding: 20px 22px 40px;
+  line-height: 1.4;
+}
+
+.note small {
+  display: block;
+  text-align: left;
+  font-size: 13px;
+  color: #8e8e93;
+  margin: 0 0 5px;
+}
+
+.note h2 {
+  font-size: 26px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.note-text {
+  white-space: pre-wrap;
+  margin: 0;
+}
+
 </style>
 </head>
 <body>
@@ -697,14 +723,11 @@ $("#noteList").onclick = e => {
 
   const n = DATA.notas[Number(r.dataset.n)];
 
-  $("#noteView").innerHTML =
-    dbar("Notas") +
-    `<div class="scroll">
-      <div class="note">
-        <h2>${esc(n.titulo)}</h2>
-        <small>${esc(n.fecha || "")}</small>
-        <div class="note-text">${esc(n.texto)}</div>
-      </div>
+  <div class="note">
+  <small>${esc(n.fecha || "")}</small>
+  <h2>${esc(n.titulo)}</h2>
+  <div class="note-text">${esc(n.texto)}</div>
+</div>
     </div>`;
 
   $("#noteView").classList.add("on");
