@@ -345,6 +345,17 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .note-text {
   white-space: pre-wrap;
 }
+/* Notificaciones estilo iOS: vidrio translúcido */
+#notif {
+  background: rgba(245, 245, 250, 0.58);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
 </style>
 </head>
 <body>
