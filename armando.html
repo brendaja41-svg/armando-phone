@@ -723,16 +723,18 @@ $("#noteList").onclick = e => {
 
   const n = DATA.notas[Number(r.dataset.n)];
 
-  <div class="note">
-  <small>${esc(n.fecha || "")}</small>
-  <h2>${esc(n.titulo)}</h2>
-  <div class="note-text">${esc(n.texto)}</div>
-</div>
+  $("#noteView").innerHTML =
+    dbar("Notas") +
+    `<div class="scroll">
+      <div class="note">
+        <small>${esc(n.fecha || "")}</small>
+        <h2>${esc(n.titulo)}</h2>
+        <div class="note-text">${esc(n.texto)}</div>
+      </div>
     </div>`;
 
   $("#noteView").classList.add("on");
 };
-
 
 /* Fotos */
 const fondo = (f,i) => f.src ? `background-image:url('${encodeURI(f.src)}')` : `background:${colores[i%6]}`;
