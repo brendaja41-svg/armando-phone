@@ -224,6 +224,127 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .mtime{display:flex;justify-content:space-between;font-size:13px;color:#8e8e93;margin-top:6px}
 .mplay{width:72px;height:72px;border-radius:50%;background:#ff3b30;color:#fff;font-size:30px;margin-top:34px;display:inline-flex;align-items:center;justify-content:center}
  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
+
+/* ===== NOTAS: estilo iPhone 17, personal y sencillo ===== */
+
+#app-notas {
+  background: #f2f2f7;
+}
+
+#app-notas > .big {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  padding: 8px 20px 14px;
+  background: #f2f2f7;
+}
+
+#app-notas > .search {
+  margin: 0 16px 16px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: #e3e3e8;
+  color: #85858b;
+  font-size: 16px;
+}
+
+#app-notas #noteList {
+  background: #fff;
+  border-radius: 12px;
+  margin: 0 16px;
+}
+
+#app-notas .nrow {
+  padding: 14px 16px;
+  min-height: 76px;
+  gap: 8px;
+}
+
+#app-notas .nrow .t b {
+  font-size: 16px;
+  font-weight: 600;
+  color: #202024;
+  margin-bottom: 4px;
+}
+
+#app-notas .nrow .t span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #8e8e93;
+}
+
+#app-notas .nrow + .nrow::before {
+  left: 16px;
+  border-color: #e5e5ea;
+}
+
+#app-notas .detail {
+  background: #fff;
+  box-shadow: none;
+}
+
+#app-notas .detail .dbar {
+  background: #fff;
+  border-bottom: 0;
+  min-height: 54px;
+  padding: 4px 14px;
+}
+
+#app-notas .detail .dbar button {
+  color: #d6a900;
+  font-size: 17px;
+}
+
+#app-notas .detail .scroll {
+  background: #fff;
+}
+
+#app-notas .detail .note {
+  padding: 8px 22px 40px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #242428;
+  background: #fff;
+}
+
+#app-notas .detail .note small {
+  text-align: left;
+  font-size: 12px;
+  color: #8e8e93;
+  margin-bottom: 10px;
+}
+
+#app-notas .detail .note h2 {
+  font-size: 27px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  margin-bottom: 14px;
+  color: #171719;
+}
+
+#app-notas .detail .note {
+  overflow-wrap: anywhere;
+}
+
+/* Barra inferior discreta */
+#app-notas .detail::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  border-radius: 10px;
+  background: #222;
+  pointer-events: none;
+}
+
+/* ===== FIN DEL ESTILO DE NOTAS ===== */
+.note-text {
+  white-space: pre-wrap;
+}
 </style>
 </head>
 <body>
@@ -544,15 +665,40 @@ $("#msgChat").addEventListener("click", e=>{ if(e.target.closest("#msgSend")) en
 $("#msgChat").addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.id==="msgIn"){ e.preventDefault(); enviarMsg(); } });
 listaMsg();
 
-/* Notas */
-$("#noteList").innerHTML = DATA.notas.map((n,i)=>
-  `<button class="row nrow" data-n="${i}"><div class="t"><b>${n.titulo}</b><span>${n.fecha||""}  ${n.texto.split("\n")[0]}</span></div></button>`).join("");
-$("#noteList").onclick = e=>{
-  const r = e.target.closest("[data-n]"); if(!r) return;
-  const n = DATA.notas[r.dataset.n];
-  $("#noteView").innerHTML = dbar("Notas") + `<div class="scroll"><div class="note"><small>${n.fecha||""}</small><h2>${n.titulo}</h2>${n.texto}</div></div>`;
+
+/* Notas: lista y editor */
+function renderListaNotas() {
+  $("#noteList").innerHTML = DATA.notas.map((n, i) => `
+    <button class="row nrow" data-n="${i}">
+      <div class="t">
+        <b>${esc(n.titulo)}</b>
+        <span>${esc(n.fecha || " ")} · ${esc(n.texto.split("\n").join(" "))}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+renderListaNotas();
+
+$("#noteList").onclick = e => {
+  const r = e.target.closest("[data-n]");
+  if (!r) return;
+
+  const n = DATA.notas[Number(r.dataset.n)];
+
+  $("#noteView").innerHTML =
+    dbar("Notas") +
+    `<div class="scroll">
+      <div class="note">
+        <h2>${esc(n.titulo)}</h2>
+        <small>${esc(n.fecha || "")}</small>
+        <div class="note-text">${esc(n.texto)}</div>
+      </div>
+    </div>`;
+
   $("#noteView").classList.add("on");
 };
+
 
 /* Fotos */
 const fondo = (f,i) => f.src ? `background-image:url('${encodeURI(f.src)}')` : `background:${colores[i%6]}`;
