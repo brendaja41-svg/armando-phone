@@ -224,7 +224,11 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;text-a
 .mtime{display:flex;justify-content:space-between;font-size:13px;color:#8e8e93;margin-top:6px}
 .mplay{width:72px;height:72px;border-radius:50%;background:#ff3b30;color:#fff;font-size:30px;margin-top:34px;display:inline-flex;align-items:center;justify-content:center}
  #bar-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:142px;height:5px;border-radius:3px;background:#fff;z-index:70;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
-
+/* Barra oscura cuando hay una aplicación abierta */
+#phone:has(.app.on) #bar-home {
+  background: #1c1c1e !important;
+  box-shadow: none !important;
+}
 /* ===== NOTAS: estilo iPhone 17, personal y sencillo ===== */
 
 #app-notas {
