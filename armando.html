@@ -826,7 +826,35 @@ body {
     top: 140px;
   }
 }
+/* NOTIFICACIONES ABAJO EN LA PANTALLA BLOQUEADA */
+#phone.locked #notif,
+#phone.locked #notifRecuerdo {
+  top: auto !important;
+  bottom: 125px !important;
+  transition: bottom 0.4s ease, transform 0.4s ease, opacity 0.3s ease;
+}
 
+/* Primera notificación */
+#phone.locked #notif {
+  z-index: 65;
+}
+
+/* Segunda notificación, apilada encima de la primera */
+#phone.locked #notifRecuerdo {
+  z-index: 66;
+}
+
+/* Cuando aparecen las dos, separarlas */
+#phone.locked #notif.on:has(~ #notifRecuerdo.on) {
+  bottom: 215px !important;
+}
+
+/* Mantener el reloj por encima del área de notificaciones */
+#lTime,
+#lDate {
+  position: relative;
+  z-index: 1;
+}
 </style>
 </head>
 <body>
