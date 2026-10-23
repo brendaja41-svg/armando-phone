@@ -975,6 +975,12 @@ const DATA = {
       { yo: false, t: "Te quiero mucho, hijo." },
       { dia: "Hoy 21:52" },
       { yo: false, t: "¿Ya comiste algo?" }
+      { yo: true, t: "No tengo mucha hambre, mamá." },
+{ yo: false, t: "Aunque sea un poquito, mijo. No puedes pasarte el día cuidando de todos y olvidarte de ti." },
+{ yo: true, t: "No sé qué hacer mami, te necesito de verdad no puedo solo aquí, intento ser fuerte por mi chiquita pero..." },
+{ yo: false, t: "Ser fuerte no significa que no puedas estar triste mi niño, ella también puede aprender que está bien llorar." },
+{ yo: true, t: "Tengo miedo de que Brian no despierte." },
+{ yo: false, t: "Lo sé mi vida, ojalá pudiera quitarte un poquito de ese miedo. No tienes que cargar con todo tú solo." }
     ]},
         { nombre: "Mi amor ❤️", hora: "Ayer", foto: "img/solo bri.JPG", chat: [
       { dia: "Martes 29 sep 18:05" },
@@ -1371,7 +1377,21 @@ $("#callView").onclick = function(e){ if(e.target.closest("[data-end]")){ callTo
 listaLlamadas();
 /* Notificación de Mamá */
 let notifTimer, notifVista = false, pendiente = false;
-function ocultarNotif(){ clearTimeout(notifTimer); $("#notif").classList.remove("on"); }
+function actualizarNotifMama() {
+  const mama = DATA.mensajes.find(m => m.nombre === "Mamá");
+  if (!mama) return;
+
+  const ultimoDeMama = [...mama.chat]
+    .reverse()
+    .find(x => x.t && !x.yo);
+
+  const texto = document.querySelector("#notif .nb");
+
+  if (ultimoDeMama && texto) {
+    texto.textContent = ultimoDeMama.t;
+  }
+}
+ function ocultarNotif(){ clearTimeout(notifTimer); $("#notif").classList.remove("on"); }
 function programarOcultar(){ clearTimeout(notifTimer); notifTimer = setTimeout(ocultarNotif, 8000); }
 function abrirChatMama(){
   const i = DATA.mensajes.findIndex(m=>m.nombre==="Mamá"); if(i<0) return;
@@ -1379,7 +1399,8 @@ function abrirChatMama(){
 }
 setTimeout(()=>{
   if(notifVista) return;
-  $("#notif").classList.add("on");
+ actualizarNotifMama();
+ $("#notif").classList.add("on");
   if(!phone.classList.contains("locked")) programarOcultar();
 }, 1000);
 const desbloquearOrig = desbloquear;
