@@ -778,6 +778,55 @@ body {
   }
 }
 
+/* Notificaciones apiladas como en iPhone */
+#notif,
+#notifRecuerdo {
+  top: 60px;
+  bottom: auto;
+  transition:
+    transform 0.4s ease,
+    opacity 0.3s ease,
+    top 0.4s ease;
+}
+
+/* Primera notificación */
+#notif {
+  z-index: 65;
+}
+
+/* Segunda notificación, debajo de la primera */
+#notifRecuerdo {
+  z-index: 66;
+  top: 155px;
+}
+
+/* Cuando el teléfono está bloqueado */
+#phone.locked #notif {
+  top: 60px;
+  bottom: auto;
+}
+
+#phone.locked #notifRecuerdo {
+  top: 155px;
+  bottom: auto;
+}
+
+/* Si solo está visible el recuerdo, sube a la primera posición */
+#phone:not(.locked) #notifRecuerdo:not(.on) {
+  top: 60px;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-height: 600px) {
+  #notif {
+    top: 45px;
+  }
+
+  #notifRecuerdo {
+    top: 140px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1304,7 +1353,7 @@ setTimeout(()=>{
   if(notifVista) return;
   $("#notif").classList.add("on");
   if(!phone.classList.contains("locked")) programarOcultar();
-}, 3000);
+}, 1000);
 const desbloquearOrig = desbloquear;
 desbloquear = function(){
   desbloquearOrig();
@@ -1386,7 +1435,7 @@ function mostrarRecuerdo() {
 /* La notificación llega aunque el teléfono esté bloqueado */
 setTimeout(() => {
   mostrarRecuerdo();
-}, 5000);
+}, 1000));
 
 /* Al tocar la notificación */
 $("#notifRecuerdo").onclick = () => {
@@ -1450,6 +1499,37 @@ desbloquear = function() {
     }
   }
 };
+
+function acomodarNotificaciones() {
+  const mama = document.querySelector("#notif");
+  const recuerdo = document.querySelector("#notifRecuerdo");
+
+  if (!mama || !recuerdo) return;
+
+  if (mama.classList.contains("on")) {
+    recuerdo.style.top = "155px";
+  } else {
+    recuerdo.style.top = "60px";
+  }
+}
+
+/* Revisar cuándo cambia la visibilidad */
+const observarNotificaciones = new MutationObserver(
+  acomodarNotificaciones
+);
+
+["#notif", "#notifRecuerdo"].forEach(selector => {
+  const elemento = document.querySelector(selector);
+
+  if (elemento) {
+    observarNotificaciones.observe(elemento, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+  }
+});
+
+acomodarNotificaciones();
 
 </script>
 </body>
