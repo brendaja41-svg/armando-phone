@@ -876,7 +876,13 @@ body {
   z-index: 9999 !important;
   pointer-events: auto !important;
 }
-
+/* Las notificaciones solo se muestran en la pantalla bloqueada */
+#phone:not(.locked) #notif,
+#phone:not(.locked) #notifRecuerdo {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-140%) !important;
+}
 </style>
 </head>
 <body>
