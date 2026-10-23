@@ -883,6 +883,17 @@ body {
   pointer-events: none !important;
   transform: translateY(-140%) !important;
 }
+ 
+/* Ocultar notificaciones mientras se introduce el código */
+#pass.on ~ #notif,
+#pass.on ~ #notifRecuerdo,
+#phone:has(#pass.on) #notif,
+#phone:has(#pass.on) #notifRecuerdo {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-140%) !important;
+}
+
 </style>
 </head>
 <body>
