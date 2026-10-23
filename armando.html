@@ -697,6 +697,87 @@ body {
   }
 }
 
+/* Notificación de recuerdo de Fotos */
+#notifRecuerdo {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 60px;
+  z-index: 70;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 22px;
+  background: rgba(246,246,250,.94);
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+  color: #000;
+  cursor: pointer;
+  transform: translateY(-140%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .4s ease, opacity .3s ease;
+}
+
+#notifRecuerdo.on {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#notifRecuerdo img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+#notifRecuerdo .ntx {
+  flex: 1;
+  min-width: 0;
+}
+
+#notifRecuerdo .nh {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+#notifRecuerdo .nh small {
+  color: #6e6e73;
+  font-size: 13px;
+}
+
+#notifRecuerdo .nb {
+  font-size: 15px;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+#notifRecuerdo .nrsub {
+  font-size: 12px;
+  color: #6e6e73;
+  margin-top: 3px;
+}
+
+#phone.locked #notifRecuerdo {
+  top: auto;
+  bottom: 130px;
+  transform: translateY(25px);
+}
+
+#phone.locked #notifRecuerdo.on {
+  transform: translateY(0);
+}
+
+@media(prefers-reduced-motion: reduce) {
+  #notifRecuerdo {
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -730,7 +811,17 @@ body {
   <div id="lock"><div id="lDate"></div><div id="lTime"></div><div class="lbtn" style="left:44px">🔦</div><div class="lbtn" style="right:44px">📷</div><div id="lHint">Desliza hacia arriba para abrir</div></div>
   <div id="pass"><div id="pTitle">Introduce el código</div><div id="dots"></div><div id="keys"></div><button id="pCancel">Cancelar</button></div>
    <div id="notif"><div class="nic">💬</div><div class="ntx"><div class="nh"><b>Mamá</b><small>ahora</small></div><div class="nb">¿Ya comiste algo?</div></div></div>
-  <div id="bar-home" title="Inicio"></div>
+<div id="notifRecuerdo">
+  <img src="img/amarillo.jpeg" alt="Foto de Amarillo">
+  <div class="ntx">
+    <div class="nh">
+      <b>Fotos</b>
+      <small>ahora</small>
+    </div>
+    <div class="nb">Un recuerdo para ti 💛</div>
+    <div class="nrsub">Mira esta foto que guardaste...</div>
+  </div>
+ <div id="bar-home" title="Inicio"></div>
 </div>
 
 <script>
@@ -1266,6 +1357,100 @@ $("#memoView").addEventListener("click", function(e){
 });
 document.addEventListener("click", function(e){ if(e.target.closest("[data-back]")) mAud.pause(); });
 $("#bar-home").addEventListener("click", function(){ mAud.pause(); });
+
+/* ==================================================
+   RECUERDO DE FOTOS: AMARILLO
+   ================================================== */
+
+let recuerdoMostrado = false;
+let recuerdoTimer = null;
+let recuerdoPendiente = false;
+
+function mostrarRecuerdo() {
+  if (recuerdoMostrado) return;
+
+  recuerdoMostrado = true;
+
+  const tarjeta = $("#notifRecuerdo");
+  if (!tarjeta) return;
+
+  tarjeta.classList.add("on");
+
+  clearTimeout(recuerdoTimer);
+
+  recuerdoTimer = setTimeout(() => {
+    tarjeta.classList.remove("on");
+  }, 10000);
+}
+
+/* La notificación llega aunque el teléfono esté bloqueado */
+setTimeout(() => {
+  mostrarRecuerdo();
+}, 5000);
+
+/* Al tocar la notificación */
+$("#notifRecuerdo").onclick = () => {
+  clearTimeout(recuerdoTimer);
+  $("#notifRecuerdo").classList.remove("on");
+
+  const indice = DATA.fotos.findIndex(
+    f => f.src === "img/amarillo.jpeg"
+  );
+
+  if (indice === -1) {
+    alert("No se encontró amarillo.jpeg en DATA.fotos.");
+    return;
+  }
+
+  /* Si está bloqueado, pedir primero la contraseña */
+  if (phone.classList.contains("locked")) {
+    recuerdoPendiente = true;
+    mostrarPass();
+    return;
+  }
+
+  abrirRecuerdoAmarillo(indice);
+};
+
+/* Abrir la foto elegida */
+function abrirRecuerdoAmarillo(indice) {
+  const f = DATA.fotos[indice];
+
+  inicio();
+  abrir("fotos");
+
+  $("#photoView").innerHTML =
+    dbar("Fotos") +
+    `<div class="scroll">
+      <div class="im" style="${fondo(f, indice)}"></div>
+      <p><b>${f.pie || ""}</b><br>${f.sub || ""}</p>
+    </div>`;
+
+  $("#photoView").classList.add("on");
+  $("#status").classList.remove("dark");
+}
+
+/* Después de introducir la contraseña, abrir el recuerdo */
+const desbloquearAntesDeRecuerdo = desbloquear;
+
+desbloquear = function() {
+  desbloquearAntesDeRecuerdo();
+
+  if (recuerdoPendiente) {
+    recuerdoPendiente = false;
+
+    const indice = DATA.fotos.findIndex(
+      f => f.src === "img/amarillo.jpeg"
+    );
+
+    if (indice !== -1) {
+      setTimeout(() => {
+        abrirRecuerdoAmarillo(indice);
+      }, 400);
+    }
+  }
+};
+
 </script>
 </body>
 </html>
